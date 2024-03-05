@@ -17,6 +17,10 @@ int main(){
 
     printf("%d\n", *ptr1);
 
+    *ptr1 = 30;
+
+    printf("%d\n", *ptr1);
+
     ptr1 = ptr2;
 
     printf("%d\n", *ptr1);
