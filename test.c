@@ -15,13 +15,10 @@ int main(){
 
     free(ptr1);
 
-    *ptr1 = 99;
-
     printf("%d\n", *ptr1);
 
     ptr1 = ptr2;
 
-    printf("%p\n", (void*)ptr1);
     printf("%d\n", *ptr1);
 
     return 0;
