@@ -14,20 +14,10 @@ int main() {
 
     for (i = 1; i <= 10; i++) {
         aux = (TNo *) malloc (sizeof(TNo));
-        //if(i == 1) {
-        //    printf("%p\n", (void*)aux);
-        //    printf ("---------\n");
-        //}
-        //printf("%p\n", (void*)aux);
-        //printf ("---------\n");
         aux->info = i;
         aux->prox = pont;
         pont = aux;
     }
-
-    printf("%p\n", (void*)aux);
-    printf("%p\n", (void*)pont);
-    printf ("---------\n");
 
     for (i = 1; i <= 10; i++) {
         printf("%d ", aux->info);
@@ -35,22 +25,11 @@ int main() {
     }
     printf ("\n");
 
-    //printf("%p\n", (void*)aux);
-    //printf("%p\n", (void*)pont);
-    //printf ("---------\n");
-
-
     for (i = 1; i <= 10; i++) {
         aux = pont;
         pont = pont->prox;
         free(aux);
     }
-
-    //printf("%p\n", (void*)aux);
-    //printf("%p\n", (void*)pont);
-    //printf ("---------\n");
-
-    //printf("%p\n", (void*)aux);
 
     return 0;
 }
