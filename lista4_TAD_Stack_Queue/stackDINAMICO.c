@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//NAO FAZER VERIFICACAO SE ESTA VAZIA/CHEIA DENTRO DAS FUNCOES
-// É ERRADO!!!!!!!!!!!!!!
-
 typedef struct noPilha {
     int info;
     struct noPilha* prox;
