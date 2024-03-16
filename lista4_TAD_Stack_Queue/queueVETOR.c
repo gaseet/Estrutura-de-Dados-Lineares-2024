@@ -16,10 +16,6 @@ void inicializar(Queue* fila) {
 }
 
 void enqueue(Queue* fila, int valor) { // enfileirar
-    if (fila->fim == TAM - 1) {
-        printf("Queue full!\n");
-        return;
-    }
     if (fila->inicio == -1)
         fila->inicio = 0;
     fila->fim++;
@@ -28,10 +24,6 @@ void enqueue(Queue* fila, int valor) { // enfileirar
 
 int dequeue(Queue* fila) {  // desenfileirar
     int valor;
-    if (fila->inicio == -1) {
-        printf("Queue empty!\n");
-        return -1;
-    }
     valor = fila->dados[fila->inicio];
     if (fila->inicio == fila->fim) {
         fila->inicio = -1;
@@ -43,22 +35,27 @@ int dequeue(Queue* fila) {  // desenfileirar
 }
 
 int head(Queue fila) {   // retornar o valor que está no início da fila
-    if (fila.inicio == -1) {
-        printf("Queue empty!\n");
-        return -1;
-    }
     return fila.dados[fila.inicio];
 }
 
 int isFull(Queue fila) { // checa se a fila está cheia
-    return (fila.fim == TAM - 1);
+    if (fila.fim == TAM -1) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 int isEmpty(Queue fila) { // checa se a fila está vazia
-    return (fila.inicio == -1);
+    if (fila.inicio == -1) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 void exibirOpcoes() {
+    printf("--------------------------\n");
     printf("Opções: \n");
     printf("1 - Enqueue \n");
     printf("2 - Dequeue \n");
@@ -76,20 +73,29 @@ int main()
         exibirOpcoes();
         scanf("%d", &op);
         switch (op) {
-        case 1: printf("Informe o valor: ");
-            scanf("%d", &num);
-            enqueue(&minhaFila, num);
-            printf("Valor enfileirado!\n");
+        case 1:
+            if(isFull(minhaFila) == 0) {
+                printf("Informe o valor: ");
+                scanf("%d", &num);
+                enqueue(&minhaFila, num);
+                printf("Valor enfileirado!\n");
+            } else {
+                printf("Erro: Fila cheia!\n");
+            }
             break;
         case 2:
-            num = dequeue(&minhaFila);
-            if (num != -1)
-                printf("Valor desenfileirado: %d\n", num);
+            if (isEmpty(minhaFila) == 0) {
+                printf("Valor desenfileirado: %d\n", dequeue(&minhaFila));
+            } else {
+                printf("Erro: Fila vazia!\n");
+            }
             break;
         case 3:
-            num = head(minhaFila);
-            if (num != -1)
-                printf("Valor no início da fila: %d\n", num);
+            if (isEmpty(minhaFila) == 0) {
+                printf("Valor no início da fila: %d\n", head(minhaFila));
+            } else {
+                printf("Erro: Fila vazia!\n");
+            }
             break;
         case 0: printf("Fim de programa!\n");
             break;
