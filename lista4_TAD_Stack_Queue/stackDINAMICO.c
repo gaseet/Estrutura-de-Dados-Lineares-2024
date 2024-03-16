@@ -78,12 +78,6 @@ int main() {
         exibirOpcoes();
         scanf("%d", &op);
         switch (op) {
-        /*case 1:
-            printf("Informe o valor: ");
-            scanf("%d", &num);
-            push(&minhaPilha, num);
-            printf("Valor empilhado!\n");
-            break;*/
         case 1:
             printf("Informe o valor: ");
             scanf("%d", &num);
