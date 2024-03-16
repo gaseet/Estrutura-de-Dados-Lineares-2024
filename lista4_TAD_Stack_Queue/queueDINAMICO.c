@@ -15,6 +15,18 @@ void inicializar(Queue* fila) {
     fila->fim = NULL;
 }
 
+int isFull(Queue fila) { // checa se a fila está cheia
+    return 0; // Lista encadeada não tem limite de tamanho, então nunca está cheia
+}
+
+int isEmpty(Queue fila) { // checa se a fila está vazia
+    if (fila.inicio == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 void enqueue(Queue* fila, int valor) { // enfileirar
     TNoQueue* novo = (TNoQueue*)malloc(sizeof(TNoQueue));
     if (novo == NULL) {
@@ -23,7 +35,7 @@ void enqueue(Queue* fila, int valor) { // enfileirar
     }
     novo->info = valor;
     novo->prox = NULL;
-    if (fila->fim == NULL) {
+    if (isEmpty(*fila) == 1) {
         fila->inicio = novo;
         fila->fim = novo;
     }
@@ -37,7 +49,7 @@ int dequeue(Queue* fila) {  // desenfileirar
     int valor = fila->inicio->info;
     TNoQueue* temp = fila->inicio;
     fila->inicio = fila->inicio->prox;
-    if (fila->inicio == NULL) {
+    if (isEmpty(*fila) == 1) {
         fila->fim = NULL;
     }
     free(temp);
@@ -46,14 +58,6 @@ int dequeue(Queue* fila) {  // desenfileirar
 
 int head(Queue fila) {   // retornar o valor que está no início da fila
     return fila.inicio->info;
-}
-
-int isFull(Queue fila) { // checa se a fila está cheia
-    return 0; // Lista encadeada não tem limite de tamanho, então nunca está cheia
-}
-
-int isEmpty(Queue fila) { // checa se a fila está vazia
-    return fila.inicio == NULL;
 }
 
 void exibirOpcoes() {
