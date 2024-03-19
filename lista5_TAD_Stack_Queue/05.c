@@ -35,7 +35,7 @@ int isEmpty(Queue fila) { // checa se a fila está vazia
     }
 }
 
-void fornecerSenha(Queue* fila, int valor) { // enfileirar
+void enqueue(Queue* fila, int valor) { // enfileirar
     TNoQueue* novo = (TNoQueue*)malloc(sizeof(TNoQueue));
     if (novo == NULL) {
         printf("Erro: Memória insuficiente!\n");
@@ -54,7 +54,7 @@ void fornecerSenha(Queue* fila, int valor) { // enfileirar
     fila->tamanho++;
 }
 
-int chamarSenha(Queue* fila) {  // desenfileirar
+int dequeue(Queue* fila) {  // desenfileirar
     int valor = fila->inicio->info;
     TNoQueue* temp = fila->inicio;
     fila->inicio = fila->inicio->prox;
@@ -62,7 +62,16 @@ int chamarSenha(Queue* fila) {  // desenfileirar
         fila->fim = NULL;
     }
     free(temp);
+    fila->tamanho--;
     return valor;
+}
+
+int chamarSenha (Queue *fila) {
+    return dequeue(fila);
+}
+
+void fornecerSenha (Queue *fila, int valor) {
+    enqueue(fila, valor);
 }
 
 void exibirOpcoes() {
