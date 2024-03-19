@@ -20,7 +20,7 @@ int isFull(Queue fila) { // checa se a fila está cheia
 }
 
 int isEmpty(Queue fila) { // checa se a fila está vazia
-    if (fila.inicio == NULL) {
+    if (fila.inicio == NULL && fila.fim == NULL) {
         return 1;
     } else {
         return 0;
@@ -49,11 +49,15 @@ int dequeue(Queue* fila) {  // desenfileirar
     int valor = fila->inicio->info;
     TNoQueue* temp = fila->inicio;
     fila->inicio = fila->inicio->prox;
-    if (isEmpty(*fila) == 1) {
+    if (fila->inicio == NULL) {
         fila->fim = NULL;
     }
     free(temp);
     return valor;
+}
+
+int head (Queue fila) {
+    return fila.inicio->info;
 }
 
 int chamarSenha (Queue *fila) {

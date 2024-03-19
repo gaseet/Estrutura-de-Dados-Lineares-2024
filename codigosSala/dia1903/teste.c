@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h> // para malloc e free
 
-#define MAX_SENHAS 20
-
 typedef struct noQueue {
     int info;
     struct noQueue* prox;
@@ -10,21 +8,15 @@ typedef struct noQueue {
 
 typedef struct queue {
     TNoQueue* inicio, * fim;
-    int tamanho;
 } Queue;
 
 void inicializar(Queue* fila) {
     fila->inicio = NULL;
     fila->fim = NULL;
-    fila->tamanho = 0;
 }
 
 int isFull(Queue fila) { // checa se a fila está cheia
-    if (fila.tamanho == MAX_SENHAS) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return 0;
 }
 
 int isEmpty(Queue fila) { // checa se a fila está vazia
@@ -51,23 +43,17 @@ void enqueue(Queue* fila, int valor) { // enfileirar
         fila->fim->prox = novo;
         fila->fim = novo;
     }
-    fila->tamanho++;
 }
 
 int dequeue(Queue* fila) {  // desenfileirar
     int valor = fila->inicio->info;
     TNoQueue* temp = fila->inicio;
     fila->inicio = fila->inicio->prox;
-    if (fila->inicio == NULL) {
+    if (isEmpty(*fila) == 1) {
         fila->fim = NULL;
     }
     free(temp);
-    fila->tamanho--;
     return valor;
-}
-
-int head (Queue fila) {
-    return fila.inicio->info;
 }
 
 int chamarSenha (Queue *fila) {
@@ -92,18 +78,18 @@ int main()
     Queue minhaFila;
     inicializar(&minhaFila);
     int op, num;
-    int ordem = 1;
+    int senha = 1;
     do {
         exibirOpcoes();
         scanf("%d", &op);
         switch (op) {
         case 1:
             if(isFull(minhaFila) == 0) {
-                fornecerSenha(&minhaFila, ordem);
-                printf("Senha %d fornecida!\n", ordem);
-                ordem++;
+                fornecerSenha(&minhaFila, senha);
+                printf("Senha %d fornecida!\n", senha);
+                senha++;
             } else {
-                printf("Erro: Tamanho máximo de 20 clientes na fila alcançado, retorne depois!\n");
+                printf("Erro: Fila cheia!\n");
             }
             break;
         case 2:
