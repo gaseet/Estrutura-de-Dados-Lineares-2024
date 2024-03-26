@@ -6,7 +6,7 @@ typedef struct noQueue {
     struct noQueue *prox;
 } TNoQueue;
 
-typedef struct queue{
+typedef struct queue {
     TNoQueue *inicio, *fim;
 } Queue;
 
@@ -30,7 +30,7 @@ int isFull(Queue fila) {
 void enqueue(Queue *fila, int valor) {
     TNoQueue *novoNo = (TNoQueue*)malloc(sizeof(TNoQueue));
     if (novoNo == NULL) {
-        printf("Erro: Memória insuficiente!\n");
+        printf("Erro: memória insuficiente!\n");
         exit(1);
     }
     novoNo->info = valor;
@@ -46,12 +46,12 @@ void enqueue(Queue *fila, int valor) {
 
 int dequeue(Queue *fila) {
     int num = fila->inicio->info;
-    TNoQueue *temp = fila->inicio;
+    TNoQueue *aux = fila->inicio;
     fila->inicio = fila->inicio->prox;
     if (fila->inicio == NULL) {
         fila->fim = NULL;
     }
-    free(temp);
+    free(aux);
     return num;
 }
 
@@ -61,9 +61,9 @@ int head(Queue fila) {
 
 void list(Queue fila) {
     TNoQueue *atual = fila.inicio;
-    while(atual != NULL) {
-        if(atual->prox == NULL) {
-            printf("%d\n", atual->info);
+    while (atual != NULL) {
+        if (atual->prox == NULL) {
+            printf("%d\n ", atual->info);
         } else {
             printf("%d, ", atual->info);
         }
@@ -76,7 +76,7 @@ void cancel(Queue *fila, int valor) {
     TNoQueue *anterior = NULL;
     int encontrado = 0;
     while (atual != NULL) {
-        if (atual->info == valor) {
+        if (atual->info == valor && encontrado == 0) {
             if (anterior == NULL) {
                 fila->inicio = atual->prox;
                 free(atual);
@@ -87,13 +87,13 @@ void cancel(Queue *fila, int valor) {
                 atual = anterior->prox;
             }
             encontrado = 1;
-            printf("Valor %d removido com sucesso!\n", valor);
+            printf("Valor %d removido da fila!\n", valor);
         } else {
             anterior = atual;
             atual = atual->prox;
         }
     }
-    if (!encontrado) {
+    if (encontrado == 0) {
         printf("Valor %d não encontrado na fila!\n", valor);
     }
 }
