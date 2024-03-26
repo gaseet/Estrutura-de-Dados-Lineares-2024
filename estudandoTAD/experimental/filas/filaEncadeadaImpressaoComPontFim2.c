@@ -1,170 +1,158 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct noQueue {
-    int info;
-    struct noQueue *prox;
-} TNoQueue;
+typedef struct noDeque {
+	int info;
+	struct noDeque* prox;
+} TNoDeque;
 
-typedef struct queue {
-    TNoQueue *inicio, *fim;
-} Queue;
+typedef struct deque{
+	TNoDeque* inicio, * fim;
+} Deque;
 
-void inicializar(Queue *fila) {
-    fila->inicio = NULL;
-    fila->fim = NULL;
+void inicializar(Deque* deque) {
+	deque->inicio = NULL;
+	deque->fim = NULL;
 }
 
-int isEmpty(Queue fila) {
-    if (fila.inicio == NULL && fila.fim == NULL) {
-        return 1;
-    } else {
-        return 0;
-    }
+int isEmpty(Deque deque) {
+	if (deque.inicio == NULL && deque.fim == NULL) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
-int isFull(Queue fila) {
-    return 0;
+int isFull(Deque deque) {
+	return 0;
 }
 
-void enqueue(Queue *fila, int valor) {
-    TNoQueue *novoNo = (TNoQueue*)malloc(sizeof(TNoQueue));
-    if (novoNo == NULL) {
-        printf("Erro: memória insuficiente!\n");
-        exit(1);
-    }
-    novoNo->info = valor;
-    novoNo->prox = NULL;
-    if (isEmpty(*fila) == 1) {
-        fila->inicio = novoNo;
-        fila->fim = novoNo;
-    } else {
-        fila->fim->prox = novoNo;
-        fila->fim = novoNo;
-    }
+void push(Deque* deque, int valor) { //insere no inicio
+	TNoDeque* novoNo = (TNoDeque*)malloc(sizeof(TNoDeque));
+	if (novoNo == NULL) {
+		printf("Erro: Memória insuficiente!\n");
+		exit(1);
+	}
+	novoNo->info = valor;
+	novoNo->prox = deque->inicio;
+	deque->inicio = novoNo;
 }
 
-int dequeue(Queue *fila) {
-    int num = fila->inicio->info;
-    TNoQueue *aux = fila->inicio;
-    fila->inicio = fila->inicio->prox;
-    if (fila->inicio == NULL) {
-        fila->fim = NULL;
-    }
-    free(aux);
-    return num;
+int pop(Deque* deque) { //tira do inicio
+	int num = deque->inicio->info;
+	TNoDeque* aux = deque->inicio;
+	deque->inicio = deque->inicio->prox;
+	if (deque->inicio == NULL) {
+		deque->fim = NULL;
+	}
+	free(aux);
+	return num;
 }
 
-int head(Queue fila) {
-    return fila.inicio->info;
+void inject(Deque* deque, int valor) {
+	TNoDeque* novoNo = (TNoDeque*)malloc(sizeof(TNoDeque));
+	if (novoNo == NULL) {
+		printf("Erro: Memória insuficiente!\n");
+		exit(1);
+	}
+	novoNo->info = valor;
+	novoNo->prox = NULL;
+	if (isEmpty(*deque) == 1) {
+		deque->inicio = novoNo;
+		deque->fim = novoNo;
+	}
+	else {
+		deque->fim->prox = novoNo;
+		deque->fim = novoNo;
+	}
 }
 
-void list(Queue fila) {
-    TNoQueue *atual = fila.inicio;
-    while (atual != NULL) {
-        if (atual->prox == NULL) {
-            printf("%d\n ", atual->info);
-        } else {
-            printf("%d, ", atual->info);
-        }
-        atual = atual->prox;
-    }
-}
-
-void cancel(Queue *fila, int valor) {
-    TNoQueue *atual = fila->inicio;
-    TNoQueue *anterior = NULL;
-    int encontrado = 0;
-    while (atual != NULL) {
-        if (atual->info == valor && encontrado == 0) {
-            if (anterior == NULL) {
-                fila->inicio = atual->prox;
-                free(atual);
-                atual = fila->inicio;
-            } else {
-                anterior->prox = atual->prox;
-                free(atual);
-                atual = anterior->prox;
-            }
-            encontrado = 1;
-            printf("Valor %d removido da fila!\n", valor);
-        } else {
-            anterior = atual;
-            atual = atual->prox;
-        }
-    }
-    if (encontrado == 0) {
-        printf("Valor %d não encontrado na fila!\n", valor);
-    }
+int eject(Deque* deque) { //tira do final???
+	TNoDeque* atual = deque->inicio;
+	TNoDeque* anterior = NULL;
+	while (atual->prox != NULL) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+	int num = atual->info;
+	if (anterior == NULL) {
+		free(atual);
+		deque->fim = NULL;
+		deque->inicio = NULL;
+	}
+	else {
+		anterior->prox = NULL;
+		deque->fim = anterior;
+		free(atual);
+	}
+	return num;
 }
 
 void exibirOpcoes() {
-    printf("Opções: \n");
-    printf("1 - Enqueue \n");
-    printf("2 - Dequeue \n");
-    printf("3 - Head \n");
-    printf("4 - List\n");
-    printf("5 - Cancel\n");
-    printf("0 - Encerrar programa \n");
-    printf("Informe a opção desejada: ");
+	printf("Opções:\n");
+	printf("1 - Push\n");
+	printf("2 - Pop\n");
+	printf("3 - Inject\n");
+	printf("4 - Eject\n");
+	printf("0 - Encerrar programa\n");
+	printf("Informe a opção desejada: ");
 }
 
 int main() {
-    Queue minhaFila;
-    inicializar(&minhaFila);
-    int op, num;
-    do {
-        exibirOpcoes();
-        scanf("%d", &op);
-        switch (op) {
-            case 1:
-                if(isFull(minhaFila) == 0) {
-                    printf("Informe o valor: ");
-                    scanf("%d", &num);
-                    enqueue(&minhaFila, num);
-                    printf("Valor enfileirado!\n");
-                } else {
-                    printf("Erro: Fila cheia!\n");
-                }
-                break;
-            case 2:
-                if (isEmpty(minhaFila) == 0) {
-                    num = dequeue(&minhaFila);
-                    printf("Valor desenfileirado: %d\n", num);
-                } else {
-                    printf("Erro: Fila vazia!\n");
-                }
-                break;
-            case 3:
-                if (isEmpty(minhaFila) == 0) {
-                    num = head(minhaFila);
-                    printf("Valor no início: %d\n", num);
-                } else {
-                    printf("Erro: Fila vazia!\n");
-                }
-                break;
-            case 4:
-                if (isEmpty(minhaFila) == 0) {
-                    list(minhaFila);
-                } else {
-                    printf("Erro: Fila vazia!\n");
-                }
-                break;
-            case 5:
-                if (isEmpty(minhaFila) == 0) {
-                    printf("Informe o valor a ser removido: ");
-                    scanf("%d", &num);
-                    cancel(&minhaFila, num);
-                } else {
-                    printf("Erro: Fila vazia!\n");
-                }
-                break;
-            case 0: 
-                printf("Encerrando!\n");
-                break;
-            default:
-                printf("Opção inválida!\n");
-        }
-    } while (op != 0);
-    return 0;
+	Deque minhaDeque;
+	inicializar(&minhaDeque);
+	int op, num;
+	do {
+		exibirOpcoes();
+		scanf("%d", &op);
+		switch (op) {
+		case 1:
+			if (isFull(minhaDeque) == 0) {
+				printf("Informe o valor: ");
+				scanf("%d", &num);
+				push(&minhaDeque, num);
+				printf("Valor %d inserido no início da Deque!\n", num);
+			}
+			else {
+				printf("Erro: Deque Cheia!\n");
+			}
+			break;
+		case 2:
+			if (isEmpty(minhaDeque) == 0) {
+				int num = pop(&minhaDeque);
+				printf("Valor removido do início da Deque: %d\n", num);
+			}
+			else {
+				printf("Erro: Deque vazia!\n");
+			}
+			break;
+		case 3:
+			if (isFull(minhaDeque) == 0) {
+				printf("Informe o valor: ");
+				scanf("%d", &num);
+				inject(&minhaDeque, num);
+				printf("Valor %d inserido no final da Deque!\n", num);
+			}
+			else {
+				printf("Erro: Deque Cheia!\n");
+			}
+			break;
+		case 4:
+			if (isEmpty(minhaDeque) == 0) {
+				int num = eject(&minhaDeque);
+				printf("Valor removido do final da Deque: %d\n", num);
+			}
+			else {
+				printf("Erro: Deque vazia!\n");
+			}
+			break;
+		case 0:
+			printf("Encerrando!\n");
+			break;
+		default:
+			printf("Opção inválida!\n");
+		}
+	} while (op != 0);
+	return 0;
 }
