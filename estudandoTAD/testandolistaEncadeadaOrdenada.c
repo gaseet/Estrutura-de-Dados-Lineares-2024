@@ -103,6 +103,65 @@ void inserir(LSEInteiros *lista, int valor) {
     }
 }
 
+void remover(LSEInteiros *lista, int valor) {
+    TNoLSE *atual = lista->inicio;
+    TNoLSE *anterior = NULL;
+
+    // Verifica se o valor a ser removido está no primeiro nó
+    if (atual->info == valor) {
+        // Se a lista tem apenas um nó
+        if (lista->inicio == lista->fim) {
+            lista->inicio = NULL;
+            lista->fim = NULL;
+        } else { //Se tem multiplos nós
+            lista->inicio = atual->prox;
+        }
+        free(atual);
+        lista->qtd--;
+        printf("Remoção efetuada.\n");
+        return;
+    }
+
+    // Atualiza anterior para atual e atual para o próximo nó da lista, 
+    // já que o primeiro nó já foi verificado
+    anterior = atual;
+    atual = atual->prox;
+
+    while (atual != NULL) {
+        if (atual->info == valor) { // Se o valor foi encontrado
+            if (atual == lista->fim) { // Se for o último nó da lista
+                lista->fim = anterior;
+                anterior->prox = NULL;
+            } else { // Se estiver no "meio"
+                anterior->prox = atual->prox;
+            }
+            free(atual);
+            lista->qtd--;
+            printf("Remoção efetuada.\n");
+            return;
+        } else if (atual->info > valor) {
+            printf("Valor não encontrado na lista.\n");
+            return;
+        } else { // Avança os auxiliares
+            anterior = atual;
+            atual = atual->prox;
+        }
+    }
+    printf("Valor não encontrado na lista.\n");
+}
+
+void exibirLista(LSEInteiros lista) {
+    TNoLSE *aux = lista.inicio;
+    while (aux != NULL) {
+        if (aux->prox == NULL) {
+            printf("%d\n", aux->info);
+        } else {
+            printf("%d, ", aux->info);
+        }
+        aux = aux->prox;
+    }
+}
+
 void exibirOpcoes() {
     printf("Opções: \n");
     printf("1 - Inserir valor\n");
@@ -122,16 +181,24 @@ int main() {
         switch (op) {
             case 1: 
                 printf("Informe o valor a ser inserido: ");
-                scanf("%d", num);
+                scanf("%d", &num);
                 inserir(&listaInteiros, num);
                 break;
             case 2: 
-                // Remover valor
-                // Implementação necessária
+                if (isEmpty(listaInteiros) == TRUE) {
+                    printf("Erro: Lista vazia!\n");
+                } else {
+                    printf("Informe o valor a ser removido: ");
+                    scanf("%d", &num);
+                    remover(&listaInteiros, num);
+                }
                 break;
             case 3: 
-                // Exibir lista
-                // Implementação necessária
+                if (isEmpty(listaInteiros) == TRUE) {
+                    printf("Erro: Lista vazia!\n");
+                } else {
+                    exibirLista(listaInteiros);
+                }
                 break;
             case 0: 
                 printf("Fim de programa! \n");
