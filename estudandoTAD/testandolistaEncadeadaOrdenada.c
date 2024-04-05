@@ -92,6 +92,7 @@ void inserir(LSEInteiros *lista, int valor) {
                 novoNo->info = valor;
                 novoNo->prox = atual;
                 anterior->prox = novoNo;
+                lista->qtd++;
                 printf("Inserção efetuada.\n");
                 finalizou = TRUE;
             } 
