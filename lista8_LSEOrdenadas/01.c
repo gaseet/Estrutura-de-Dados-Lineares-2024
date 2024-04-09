@@ -244,8 +244,8 @@ void exibirOpcoes() {
 }
 
 int main() {
-    LSEContato listaInteiros;
-    inicializar(&listaInteiros);
+    LSEContato listaContatos;
+    inicializar(&listaContatos);
     int op;
     Contato contato;
     do {
@@ -260,40 +260,40 @@ int main() {
                 fgets(contato.email, sizeof(contato.email), stdin);
                 printf("Informe o telefone do contato a ser inserido: ");
                 fgets(contato.telefone, sizeof(contato.telefone), stdin);
-                inserir(&listaInteiros, contato);
+                inserir(&listaContatos, contato);
                 break;
             case 2: 
-                if (isEmpty(listaInteiros) == TRUE) {
+                if (isEmpty(listaContatos) == TRUE) {
                     printf("Erro: Lista vazia!\n");
                 } else {
                     printf("Informe o nome do contato a ser removido: ");
                     fgets(contato.nome, sizeof(contato.nome), stdin);
-                    remover(&listaInteiros, contato.nome);
+                    remover(&listaContatos, contato.nome);
                 }
                 break;
             case 3: 
-                if (isEmpty(listaInteiros) == TRUE) {
+                if (isEmpty(listaContatos) == TRUE) {
                     printf("Erro: Lista vazia!\n");
                 } else {
-                    exibirLista(listaInteiros);
+                    exibirLista(listaContatos);
                 }
                 break;
             case 4:
-                if (isEmpty(listaInteiros) == TRUE) {
+                if (isEmpty(listaContatos) == TRUE) {
                     printf("Erro: Lista vazia!\n");
                 } else {
                     printf("Informe o nome do contato a ser procurado: ");
                     fgets(contato.nome, sizeof(contato.nome), stdin);
-                    procurar(listaInteiros, contato.nome);
+                    procurar(listaContatos, contato.nome);
                 }
                 break;
             case 5:
-                if (isEmpty(listaInteiros) == TRUE) {
+                if (isEmpty(listaContatos) == TRUE) {
                     printf("Erro: Lista vazia!\n");
                 } else {
                     printf("Informe o nome do contato a ser alterado: ");
                     fgets(contato.nome, sizeof(contato.nome), stdin);
-                    alterar(&listaInteiros, contato.nome);
+                    alterar(&listaContatos, contato.nome);
                 }
                 break;
             case 0: 
