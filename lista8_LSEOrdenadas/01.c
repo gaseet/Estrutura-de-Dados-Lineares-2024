@@ -4,8 +4,6 @@
 #define TRUE 1
 #define FALSE 0
 
-/*ATUALIZAR AS FUNCOES PARA O STRUCT, ATUALMENTE ESTA PARA INTEIROS*/
-
 typedef struct contato {
     char nome[50];
     char telefone[50];
@@ -254,7 +252,7 @@ int main() {
         exibirOpcoes();
         scanf("%d", &op);
         getchar(); // Limpa buffer
-        switch (op) { //MUDAR PARA FGETS E ATUALIZAR O RESTO DAS FUNCOES
+        switch (op) {
             case 1: 
                 printf("Informe o nome do contato a ser inserido: ");
                 fgets(contato.nome, sizeof(contato.nome), stdin);
