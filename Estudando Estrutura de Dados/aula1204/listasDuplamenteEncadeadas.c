@@ -51,7 +51,7 @@ TNoLDE *busca(LDE lista, int valor) {
             return lista.fim;
         } else { // Busca no "meio"
             aux = lista.inicio->prox;  // Evita comparação dupla
-            while (aux != NULL && aux != lista.fim) { // Evita comparação dupla
+            while (aux != NULL) { // Comparação dupla todo loop é custoso demais, melhor deixar comparar com o fim duas vezes
                 if(aux->info == valor) { // Achou
                     return aux;
                 } else { // Passa pro proximo
