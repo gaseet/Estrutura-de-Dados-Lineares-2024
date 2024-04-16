@@ -1,0 +1,31 @@
+void removerValorEspecifico(LDE *lista, int valor) {
+    TNoLDE *aux = busca(*lista, valor);
+    if (aux == NULL) {
+        printf("Valor não encontrado na lista!\n");
+        return;
+    } else if (lista->inicio == lista->fim) { // Apenas um nó
+        lista->inicio = NULL;
+        lista->fim = NULL;
+        lista->qtd--;
+        free(aux);
+        printf("Remoção efetuada!\n");
+    } else if (aux == lista->inicio) { // Remoção do início
+        lista->inicio = lista->inicio->prox;
+        lista->inicio->ant = NULL;
+        lista->qtd--;
+        free(aux);
+        printf("Remoção efetuada!\n");  
+    } else if (aux == lista->fim) { // Remoção do final
+        lista->fim = lista->fim->ant;
+        lista->fim->prox = NULL;
+        lista->qtd--;
+        free(aux);
+        printf("Remoção efetuada!\n");
+    } else { // Remoção do meio
+        aux->ant->prox = aux->prox;
+        aux->prox->ant = aux->ant;
+        lista->qtd--;
+        free(aux);
+        printf("Remoção efetuada!\n");
+    }
+}
