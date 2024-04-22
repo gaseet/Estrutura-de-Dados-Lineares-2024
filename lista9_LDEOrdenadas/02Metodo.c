@@ -42,19 +42,6 @@ void inserirOrdenado(LDE *lista, Teste valor) {
         novoNo->prox = NULL;
         lista->qtd++;
         printf("Inserção efetuada.\n");
-    } else if (valor.num == lista->fim->info.num ) { //insere no final (ANTES DO REPETIDO)
-       novoNo = (TNoLDE*)malloc(sizeof(TNoLDE));
-        if(novoNo == NULL) {
-            printf("Erro na alocação de memória!\n");
-            exit(1);
-        }
-        novoNo->prox = lista->fim;
-        novoNo->ant = lista->fim->ant;
-        lista->fim->ant->prox = novoNo;
-
-        novoNo->info = valor;
-        lista->qtd++;
-        printf("Inserção efetuada.\n");
     } else {
         atual = lista->inicio->prox;
         while (atual != NULL && finalizou == FALSE) {

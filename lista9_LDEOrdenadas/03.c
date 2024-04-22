@@ -45,28 +45,33 @@ int isEmpty(LDE lista) {
     }
 }
 
-/*TNoLDE *busca(LDE lista, int valor) {
+TNoLDE *busca(LDE lista, int valor) {
     TNoLDE *aux;
     if (isEmpty(lista) == TRUE) {
         return NULL;
     } else {
-        if (lista.inicio->info == valor) { // Verifica se esta no inicio
+        if (valor == lista.inicio->info.num) { // Verifica se esta no inicio
             return lista.inicio;
-        } else if (lista.fim->info == valor) { //Verifica se esta no fim
+        } else if (valor < lista.inicio->info.num) { // Verifica se é menor que o início (Não está na lista)
+            return NULL;
+        } else if (valor == lista.fim->info.num) { //Verifica se esta no fim
             return lista.fim;
+        } else if (valor > lista.fim->info.num) { // Verifica se é maior que o fim (Não está na lista)
+            return NULL;
         } else { // Busca no "meio"
             aux = lista.inicio->prox;  // Evita comparação dupla
-            while (aux != NULL) { // Comparação dupla todo loop é custoso demais, melhor deixar comparar com o fim duas vezes
-                if(aux->info == valor) { // Achou
+            while (1) { // Comparação dupla todo loop é custoso demais, melhor deixar comparar com o fim duas vezes
+                if(aux->info.num == valor) { // Achou
                     return aux;
+                } else if (aux->info.num > valor) {
+                    return NULL;
                 } else { // Passa pro proximo
                     aux = aux->prox;
                 }
-            } // Se chegar aqui, o valor não foi encontrado.
-            return NULL;
+            }
         }
     }
-}*/
+}
 
 void inserirOrdenado(LDE *lista, Teste valor) {
     TNoLDE *novoNo, *atual;
@@ -136,7 +141,7 @@ void inserirOrdenado(LDE *lista, Teste valor) {
     }
 }
 
-/*void removerValorEspecifico(LDE *lista, int valor) {
+void removerValorEspecifico(LDE *lista, int valor) {
     TNoLDE *aux = busca(*lista, valor);
     if (aux == NULL) {
         printf("Valor não encontrado na lista!\n");
@@ -166,7 +171,13 @@ void inserirOrdenado(LDE *lista, Teste valor) {
         free(aux);
         printf("Remoção efetuada!\n");
     }
-}*/
+}
+
+void removerValorEspecificoTodos(LDE *lista, int valor) {
+    while (busca(*lista, valor) != NULL) {
+        removerValorEspecifico(lista, valor);
+    }
+}
 
 void exibirInicioFim(LDE lista) {
     TNoLDE *aux = lista.inicio;
@@ -235,13 +246,13 @@ int main() {
                 }
                 break;
             case 7: 
-                /*if (isEmpty(lista) == FALSE) {
+                if (isEmpty(lista) == FALSE) {
                     printf("Informe o valor a ser Removido: ");
                     scanf("%d", &num);
-                    removerValorEspecifico(&lista, num);
+                    removerValorEspecificoTodos(&lista, num);
                 } else {
                     printf("Erro: Lista vazia!\n");
-                }*/
+                }
                 break;
             case 8: 
                 printf("Informe o valor a ser inserido: ");
