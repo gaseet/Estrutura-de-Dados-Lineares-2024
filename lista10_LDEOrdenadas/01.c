@@ -160,7 +160,7 @@ void intersecao(LDE listaA, LDE listaB, LDE *listaResultado) {
     } else {
         aux = listaA.inicio;
         while (aux != NULL) { // Percorre A buscando em B
-            if (busca(listaB, aux->info) != NULL) {
+            if (busca(listaB, aux->info) != NULL) { // Se achar insere
                 inserirOrdenadoSemRepeticoes(listaResultado, aux->info);
             }
             aux = aux->prox;
@@ -205,7 +205,7 @@ void diferenca(LDE listaA, LDE listaB, LDE *listaResultado) {
     } else { // Se as duas não estiverem vazias, percorre a lista A
         aux = listaA.inicio;
         while (aux != NULL) {
-            if (busca(listaB, aux->info) == NULL) {
+            if (busca(listaB, aux->info) == NULL) { // Se não achar insere
                 inserirOrdenadoSemRepeticoes(listaResultado, aux->info);
             }
             aux = aux->prox;
