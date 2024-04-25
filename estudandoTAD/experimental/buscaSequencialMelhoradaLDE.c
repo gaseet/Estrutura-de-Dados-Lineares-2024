@@ -14,21 +14,16 @@ typedef struct lde {
     TNoLDE *fim;
 } LDE;
 
-void inicializar (LDE *lista) {
-    lista->inicio = NULL;
-    lista->fim = NULL;
-}
-
 int isEmpty (LDE lista) {
-    if (lista.inicio == NULL && lista.fim == NULL) {
+    if (lista.fim == NULL && lista.inicio == NULL) {
         return TRUE;
     } else {
         return FALSE;
     }
 }
 
-TNoLDE *busca (LDE lista, int valor) { // Busca sequencial melhorada para lista ordenada crescente
-    TNoLDE *aux;
+void *busca(LDE lista, int valor) {
+    TNoLDE *aux = lista.inicio;
     if (valor == lista.inicio->info) {
         return lista.inicio;
     } else if (valor < lista.inicio->info) {
@@ -38,7 +33,7 @@ TNoLDE *busca (LDE lista, int valor) { // Busca sequencial melhorada para lista 
     } else if (valor > lista.fim->info) {
         return NULL;
     } else {
-        aux = lista.inicio->prox;
+        aux = aux->prox;
         while (1) {
             if (valor == aux->info) {
                 return aux;
@@ -51,45 +46,7 @@ TNoLDE *busca (LDE lista, int valor) { // Busca sequencial melhorada para lista 
     }
 }
 
-void removerValorEspecifico (LDE *lista, int valor) {
-    TNoLDE *aux = busca(*lista, valor);
-    if (aux == NULL) {
-        printf("Valor não encontrado na lista!\n");
-    } else {
-        if (aux == lista->inicio) {
-            if (lista->inicio == lista->fim) {
-                lista->inicio = NULL;
-                lista->fim = NULL;
-                free(aux);
-                printf("Remoção efetuada!\n");
-            } else {
-                lista->inicio = lista->inicio->prox;
-                lista->inicio->ant = NULL;
-                free(aux);
-                printf("Remoção efetuada!\n");
-            }
-        } else if (aux == lista->fim) {
-            if (lista->fim == lista->inicio) {
-                lista->inicio = NULL;
-                lista->fim = NULL;
-                free(aux);
-                printf("Remoção efetuada!\n");
-            } else {
-                lista->fim = lista->fim->ant;
-                lista->fim->prox = NULL;
-                free(aux);
-                printf("Remoção efetuada!\n");
-            }
-        } else {
-            aux->ant->prox = aux->prox;
-            aux->prox->ant = aux->ant;
-            free(aux);
-            printf("Remoção efetuada!\n");
-        }
-    }
-}
-
-void inserirOrdenado (LDE *lista, int valor) {
+void inserirOrdenadoSemRepetidos(LDE *lista, int valor) {
     TNoLDE *novoNo, *aux;
     if (isEmpty(*lista) == TRUE) {
         novoNo = (TNoLDE*)malloc(sizeof(TNoLDE));
@@ -118,7 +75,7 @@ void inserirOrdenado (LDE *lista, int valor) {
         lista->inicio = novoNo;
         printf("Inserção efetuada!\n");
     } else if (valor == lista->inicio->info) {
-        printf("Inserção não efetuada, valor já presente!\n");
+        printf("Valor já presente!\n");
     } else if (valor > lista->fim->info) {
         novoNo = (TNoLDE*)malloc(sizeof(TNoLDE));
         if (novoNo == NULL) {
@@ -133,12 +90,12 @@ void inserirOrdenado (LDE *lista, int valor) {
         lista->fim = novoNo;
         printf("Inserção efetuada!\n");
     } else if (valor == lista->fim->info) {
-        printf("Inserção não efetuada, valor já presente!\n");
+        printf("Valor já presente!\n");
     } else {
         aux = lista->inicio->prox;
         while (aux != NULL) {
             if (valor == aux->info) {
-                printf("Inserção não efetuada, valor já presente!\n");
+                printf("Valor já presente!\n");
                 return;
             } else if (valor < aux->info) {
                 novoNo = (TNoLDE*)malloc(sizeof(TNoLDE));
@@ -149,7 +106,7 @@ void inserirOrdenado (LDE *lista, int valor) {
                 novoNo->ant = aux->ant;
                 novoNo->info = valor;
                 novoNo->prox = aux;
-                
+
                 aux->ant->prox = novoNo;
                 aux->ant = novoNo;
                 printf("Inserção efetuada!\n");
@@ -161,40 +118,35 @@ void inserirOrdenado (LDE *lista, int valor) {
     }
 }
 
-void exibirLista(LDE lista) {
-    TNoLDE *aux = lista.inicio;
-    while (aux != NULL) {
-        printf("%d ", aux->info);
-        aux = aux->prox;
+void removerValorEspecifico (LDE *lista, int valor) {
+    TNoLDE *aux = busca(*lista, valor);
+    if (aux == NULL) {
+        printf("Valor não encontrado na lista!\n");
+    } else {
+        if (aux == lista->inicio) {
+            if (lista->inicio == lista->fim) {
+                lista->inicio = NULL;
+                lista->fim = NULL;
+                free(aux);
+            } else {
+                lista->inicio = lista->inicio->prox;
+                lista->inicio->ant = NULL;
+                free(aux);
+            }
+        } else if (aux == lista->fim) {
+            if (lista->fim == lista->inicio) {
+                lista->inicio = NULL;
+                lista->fim = NULL;
+                free(aux);
+            } else {
+                lista->fim = lista->fim->ant;
+                lista->fim->prox = NULL;
+                free(aux);
+            }
+        } else {
+            aux->ant->prox = aux->prox;
+            aux->prox->ant = aux->ant;
+            free(aux);
+        }
     }
-    printf("\n");
-}
-
-void exibirListaInverso(LDE lista) {
-    TNoLDE *aux = lista.fim;
-    while (aux != NULL) {
-        printf("%d ", aux->info);
-        aux = aux->ant;
-    }
-    printf("\n");
-}
-
-int main() {
-    LDE lista;
-    inicializar(&lista);
-    inserirOrdenado(&lista, 1);
-    inserirOrdenado(&lista, 1);
-    inserirOrdenado(&lista, 2);
-    inserirOrdenado(&lista, 3);
-    inserirOrdenado(&lista, 3);
-    inserirOrdenado(&lista, 5);
-    inserirOrdenado(&lista, 5);
-    inserirOrdenado(&lista, 4);
-
-    removerValorEspecifico(&lista, 3);
-
-    exibirLista(lista);
-    exibirListaInverso(lista);
-
-    return 0;
 }

@@ -128,6 +128,7 @@ int main() {
     inserirFinal(&lista, 3);
     inserirFinal(&lista, 4);
     inserirFinal(&lista, 5);
+    inserirFinal(&lista, 5);
     
     removerEspecifico(&lista, 5);
 

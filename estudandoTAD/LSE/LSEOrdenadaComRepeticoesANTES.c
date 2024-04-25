@@ -26,6 +26,30 @@ int isEmpty(LSE lista) {
     }
 }
 
+TNoLSE *busca(LSE lista, int valor) {
+    TNoLSE *atual = lista.inicio;
+    if (valor == lista.inicio->info) {
+        return lista.inicio;
+    } else if (valor < lista.inicio->info) {
+        return NULL;
+    } else if (valor == lista.fim->info) {
+        return lista.fim;
+    } else if (valor > lista.fim->info) {
+        return NULL;
+    } else {
+        atual = atual->prox;
+        while(1) {
+            if (valor == atual->info) {
+                return atual;
+            } else if (valor < atual->info) {
+                return NULL;
+            } else {
+                atual = atual->prox;
+            }
+        }
+    }
+}
+
 void inserirOrdenado (LSE *lista, int valor) {
     TNoLSE *novoNo, *atual, *anterior;
     if (isEmpty(*lista) == TRUE) {
@@ -133,6 +157,48 @@ void removerEspecifico (LSE *lista, int valor) {
                 atual = atual->prox;
             }
         }
+    }
+}
+
+void removerEspecificoMELHOR (LSE *lista, int valor) {
+    TNoLSE *atual, *anterior;
+    atual = lista->inicio;
+    anterior = NULL;
+    if (valor == lista->inicio->info) {
+        if (lista->inicio == lista->fim) {
+            lista->inicio = NULL;
+            lista->fim = NULL;
+            free(atual);
+        } else {
+            lista->inicio = lista->inicio->prox;
+            free(atual);
+        }
+    } else if (valor < lista->inicio->info) {
+        printf("Valor não encontrado!\n");
+    } else if (valor > lista->fim->info) {
+        printf("Valor não encontrado!\n");
+    } else {
+        anterior = atual;
+        atual = atual->prox;
+        while (atual != NULL) {
+            if (valor == atual->info) {
+                anterior->prox = atual->prox;
+                free(atual);
+                return;
+            } else if (valor < atual->info) {
+                printf("Valor não encontrado!\n");
+                return;
+            } else {
+                anterior = atual;
+                atual = atual->prox;
+            }
+        }
+    }
+}
+
+void removerEspecificoTodos (LSE *lista, int valor) {
+    while (busca(*lista, valor) != NULL) {
+        removerEspecificoMELHOR(lista, valor);
     }
 }
 
