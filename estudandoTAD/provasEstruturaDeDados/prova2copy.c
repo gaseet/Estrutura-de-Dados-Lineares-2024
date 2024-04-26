@@ -39,7 +39,7 @@ void inserirFim(LSE* lista, int valor) {
             printf("Erro na alocação!\n");
             exit(1);
         }
-        novoNo->ant = NULL;
+        novoNo->ant = NULL; // Ant adicionado em inserirFim
         novoNo->info = valor;
         novoNo->prox = NULL;
 
@@ -52,7 +52,7 @@ void inserirFim(LSE* lista, int valor) {
             printf("Erro na alocação!\n");
             exit(1);
         }
-        novoNo->ant = lista->fim;
+        novoNo->ant = lista->fim; // Ant adicionado em inserirFim
         novoNo->info = valor;
         novoNo->prox = NULL;
 
