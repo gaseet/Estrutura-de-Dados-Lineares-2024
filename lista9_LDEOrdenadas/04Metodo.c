@@ -16,7 +16,7 @@ TNoLDE *busca(LDE lista, int valor) {
             while (1) { // Comparação dupla todo loop é custoso demais, melhor deixar comparar com o fim duas vezes
                 if(aux->info == valor) { // Achou
                     return aux;
-                } else if (aux->info < valor) {
+                } else if (valor > aux->info) {
                     return NULL;
                 } else { // Passa pro proximo
                     aux = aux->prox;
