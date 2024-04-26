@@ -7,7 +7,7 @@
 #define FALSE 0
 
 typedef struct noLSE {
-    struct noLSE* ant;
+    struct noLSE* ant; // Adicionado o ant no struct
     int info;
     struct noLSE* prox;
 } TNoLSE;
