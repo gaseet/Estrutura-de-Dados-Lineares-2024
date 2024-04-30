@@ -2,6 +2,7 @@
 #define FALSE 0
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 
 // TRANSFORMAR EM CIRCULAR
 
@@ -13,11 +14,13 @@ typedef struct NoLSE {
 typedef struct lse {
     TNoLSE *inicio;
     TNoLSE *fim;
+    int qtd;
 } LSE;
 
 void inicializar(LSE *lista) {
     lista->inicio = NULL;
     lista->fim = NULL;
+    lista->qtd = 0;
 }
 
 int isEmpty(LSE lista) {
@@ -61,10 +64,11 @@ void inserirOrdenado (LSE *lista, int valor) {
             exit(1);
         }
         novoNo->info = valor;
-        novoNo->prox = NULL;
+        novoNo->prox = lista->inicio;
         lista->inicio = novoNo;
         lista->fim = novoNo;
-    } else if (valor < lista->inicio->info) {
+        lista->qtd++;
+    } else if (valor < lista->inicio->info) { // insere no inicio
         novoNo = (TNoLSE*)malloc(sizeof(TNoLSE));
         if (novoNo == NULL) {
             printf("Erro na alocação!\n");
@@ -73,16 +77,19 @@ void inserirOrdenado (LSE *lista, int valor) {
         novoNo->info = valor;
         novoNo->prox = lista->inicio;
         lista->inicio = novoNo;
-    } else if (valor >= lista->fim->info) {
+        lista->fim->prox = lista->inicio;
+        lista->qtd++;
+    } else if (valor >= lista->fim->info) { // insere no final
         novoNo = (TNoLSE*)malloc(sizeof(TNoLSE));
         if (novoNo == NULL) {
             printf("Erro na alocação!\n");
             exit(1);
         }
         novoNo->info = valor;
-        novoNo->prox = NULL;
+        novoNo->prox = lista->inicio;
         lista->fim->prox = novoNo;
         lista->fim = novoNo;
+        lista->qtd++;
     } else {
         anterior = lista->inicio;
         atual = anterior->prox;
@@ -96,6 +103,7 @@ void inserirOrdenado (LSE *lista, int valor) {
                 novoNo->info = valor;
                 novoNo->prox = atual;
                 anterior->prox = novoNo;
+                lista->qtd++;
                 return;
             }
             anterior = atual;
@@ -112,9 +120,12 @@ void removerEspecificoMELHOR (LSE *lista, int valor) {
         if (lista->inicio == lista->fim) {
             lista->inicio = NULL;
             lista->fim = NULL;
+            lista->qtd--;
             free(atual);
         } else {
             lista->inicio = lista->inicio->prox;
+            lista->fim->prox = lista->inicio;
+            lista->qtd--;
             free(atual);
         }
     } else if (valor < lista->inicio->info) {
@@ -126,7 +137,12 @@ void removerEspecificoMELHOR (LSE *lista, int valor) {
         atual = atual->prox;
         while (atual != NULL) {
             if (valor == atual->info) {
-                anterior->prox = atual->prox;
+                if (atual == lista->fim) {
+                    anterior->prox = lista->inicio;
+                } else {
+                    anterior->prox = atual->prox;
+                }
+                lista->qtd--;
                 free(atual);
                 return;
             } else if (valor < atual->info) {
@@ -140,11 +156,34 @@ void removerEspecificoMELHOR (LSE *lista, int valor) {
     }
 }
 
-void exibirLista(LSE lista) {
+void exibirListaCircular(LSE lista) {
+    TNoLSE *aux = lista.inicio;
+    if (aux != NULL) {
+        for (int i = 0; i < lista.qtd; i++) {
+           printf("%d ", aux->info);
+            aux = aux->prox; 
+        }
+    }
+    printf("\n");
+}
+
+void exibirListaCircularTeste(LSE lista) {
+    TNoLSE *aux = lista.inicio;
+    if (aux != NULL) {
+        for (int i = 0; i < 10; i++) {
+            printf("%d ", aux->info);
+            aux = aux->prox; 
+        }
+    }
+    printf("\n");
+}
+
+void exibirListaCircularINFINITO(LSE lista) {
     TNoLSE *aux = lista.inicio;
     while (aux != NULL) {
         printf("%d ", aux->info);
         aux = aux->prox;
+        Sleep(1000);
     }
     printf("\n");
 }
@@ -158,10 +197,12 @@ int main() {
     inserirOrdenado(&lista, 2);
     inserirOrdenado(&lista, 5);
     inserirOrdenado(&lista, 4);
-    inserirOrdenado(&lista, 4);
     
-    removerEspecificoMELHOR(&lista, 4);
+    removerEspecificoMELHOR(&lista, 5);
 
-    exibirLista(lista);
+    exibirListaCircularTeste(lista);
+    exibirListaCircular(lista);
+    exibirListaCircularINFINITO(lista);
+
     return 0;
 }
