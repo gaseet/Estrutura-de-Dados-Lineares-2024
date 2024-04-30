@@ -90,6 +90,15 @@ void exibirLista(LSE lista) {
     printf("\n");
 }
 
+void exibirListaInverso(LSE lista) {
+    TNoLSE* aux = lista.fim;
+    while (aux != NULL) {
+        printf("%d ", aux->info);
+        aux = aux->ant;
+    }
+    printf("\n");
+}
+
 int main()
 {
     LSE lista1, lista2, listaProduto;
@@ -112,7 +121,7 @@ int main()
     gerarProduto(lista1, lista2, &listaProduto);
 
     exibirLista(listaProduto);
-
+    exibirListaInverso(listaProduto);
 
     return 0;
 }
