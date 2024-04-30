@@ -111,6 +111,7 @@ int main()
 
     gerarProduto(lista1, lista2, &listaProduto);
 
+
     exibirLista(listaProduto);
 
     return 0;
