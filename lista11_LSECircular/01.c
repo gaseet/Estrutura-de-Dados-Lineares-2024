@@ -2,7 +2,6 @@
 #define FALSE 0
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
 typedef struct node {
     int info;
