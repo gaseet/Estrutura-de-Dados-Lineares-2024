@@ -198,13 +198,6 @@ int main() {
                 exibirLista(listaInteiros);
             }
             break;
-        case 6:
-            if (isEmpty(listaInteiros) == TRUE) {
-                printf("Erro: Lista vazia!\n");
-            } else {
-                exibirListaTESTE(listaInteiros);
-            }
-            break;
         case 0: 
             printf("Fim de programa! \n");
             break;
