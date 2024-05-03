@@ -29,30 +29,6 @@ int isEmpty (LDECircular lista) {
     }
 }
 
-Node *busca (LDECircular lista, int valor) { // Busca sequencial melhorada para lista ordenada crescente
-    Node *aux;
-    if (valor == lista.inicio->info) {
-        return lista.inicio;
-    } else if (valor < lista.inicio->info) {
-        return NULL;
-    } else if (valor == lista.fim->info) {
-        return lista.fim;
-    } else if (valor > lista.fim->info) {
-        return NULL;
-    } else {
-        aux = lista.inicio->prox;
-        while (1) {
-            if (valor == aux->info) {
-                return aux;
-            } else if (valor < aux->info) {
-                return NULL;
-            } else {
-                aux = aux->prox;
-            }
-        }
-    }
-}
-
 void inserirOrdenadoCircular (LDECircular *lista, int valor) { // INSERE DEPOIS DO REPETIDO
     Node *novoNo, *aux;
     if (isEmpty(*lista) == TRUE) {
