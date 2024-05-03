@@ -29,7 +29,7 @@ int isEmpty (LDECircular lista) {
     }
 }
 
-void inserirOrdenadoCircular (LDECircular *lista, int valor) { // INSERE DEPOIS DO REPETIDO
+void inserirOrdenadoCircular (LDECircular *lista, int valor) {
     Node *novoNo, *aux;
     if (isEmpty(*lista) == TRUE) {
         novoNo = (Node*)malloc(sizeof(Node));
