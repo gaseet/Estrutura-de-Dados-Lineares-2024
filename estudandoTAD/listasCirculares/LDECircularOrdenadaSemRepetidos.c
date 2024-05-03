@@ -135,7 +135,7 @@ void inserirOrdenadoCircular (LDE *lista, int valor) {
         printf("Inserção efetuada!\n");
     } else if (valor == lista->inicio->info) {
         printf("Valor já presente na lista!\n");
-    } else if (valor > lista->fim->info) { // Insere final (depois repetido)
+    } else if (valor > lista->fim->info) { // Insere final
         novoNo = (TNoLDE*)malloc(sizeof(TNoLDE));
         if (novoNo == NULL) {
             printf("Erro na alocação!\n");
@@ -153,7 +153,7 @@ void inserirOrdenadoCircular (LDE *lista, int valor) {
     } else if (valor == lista->fim->info) {
         printf("Valor já presente na lista!\n");
     } else {
-        aux = lista->inicio->prox; // Insere meio (depois repetido)
+        aux = lista->inicio->prox; // Insere meio
         while (1) {
             if (valor == aux->info) {
                 printf("Valor já presente na lista!\n");
