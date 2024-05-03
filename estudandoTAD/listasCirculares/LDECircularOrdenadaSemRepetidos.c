@@ -99,7 +99,7 @@ void removerValorEspecificoCircular (LDE *lista, int valor) {
     }
 }
 
-void inserirOrdenadoCircular (LDE *lista, int valor) { // INSERE DEPOIS DO REPETIDO
+void inserirOrdenadoCircular (LDE *lista, int valor) {
     TNoLDE *novoNo, *aux;
     if (isEmpty(*lista) == TRUE) {
         novoNo = (TNoLDE*)malloc(sizeof(TNoLDE));
