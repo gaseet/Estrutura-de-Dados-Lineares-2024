@@ -84,7 +84,7 @@ void inserirOrdenadoCircular (LDECircular *lista, int valor) { // INSERE DEPOIS 
         printf("Valor já presente na lista!\n");
     } else {
         aux = lista->inicio->prox; // Insere meio (depois repetido)
-        while (aux != NULL) {
+        while (1) {
             if (valor == aux->info) {
                 printf("Valor já presente na lista!\n");
                 return;
