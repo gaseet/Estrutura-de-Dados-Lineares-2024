@@ -155,7 +155,7 @@ void inserirOrdenadoCircular (LDE *lista, int valor) { // INSERE DEPOIS DO REPET
     } else {
         aux = lista->inicio->prox; // Insere meio (depois repetido)
         while (aux != NULL) {
-            if (valor == lista->fim->info) {
+            if (valor == aux->info) {
                 printf("Valor já presente na lista!\n");
                 return;
             } else if (valor < aux->info) {
