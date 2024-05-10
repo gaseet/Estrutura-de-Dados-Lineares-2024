@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <windows.h>
 
-// TRANSFORMAR EM CIRCULAR
-
 typedef struct NoLSE {
     int info;
     struct NoLSE *prox;
