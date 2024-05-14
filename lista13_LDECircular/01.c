@@ -163,49 +163,135 @@ Node* consultar(LDECircular lista, char nomeAluno[]) {
     }
 }
 
-void alterarMediaFinal() {
-    // EM DESENVOLVIMENTO
+void alterarMediaFinal(LDECircular *lista, char nomeAluno[]) {
+    Node *aux = consultar(*lista, nomeAluno);
+    if (aux == NULL) {
+        printf("Nome não encontrado nesse cadastro!\n");
+        return;
+    } else {
+        printf("Informe a nova média: ");
+        scanf("%f", &aux->info->mediaFinal);
+    }
 }
 
-void alterarQtdFaltas() {
-    // EM DESENVOLVIMENTO
+void alterarQtdFaltas(LDECircular *lista, char nomeAluno[]) {
+    Node *aux = consultar(*lista, nomeAluno);
+    if (aux == NULL) {
+        printf("Nome não encontrado nesse cadastro!\n");
+        return;
+    } else {
+        printf("Informe a nova quantidade de faltas: ");
+        scanf("%d", &aux->info->qtdFaltas);
+    }
 }
 
-void exibir() {
-    // EM DESENVOLVIMENTO
+void exibir(LDECircular lista, char nomeAluno[]) {
+    Node *aux = consultar(lista, nomeAluno);
+    if (aux == NULL) {
+        printf("Nome não encontrado nesse cadastro!\n");
+        return;
+    } else {
+        printf("Aluno: %s", nomeAluno);
+        printf("Média final: %f\n", aux->info->mediaFinal);
+        printf("Quantidade de faltas: %d\n", aux->info->qtdFaltas);
+    }
 }
 
-void remover() {
-    // EM DESENVOLVIMENTO
+void remover(LDECircular *lista, char nomeAluno[]) {
+    Node *aux = consultar(*lista, nomeAluno);
+    if (aux == NULL) {
+        printf("Aluno não encontrado no cadastro!\n");
+    } else if (aux == lista->inicio) {
+        if (lista->inicio == lista->fim) {
+            free(lista->inicio->info);
+            free(lista->inicio);
+            lista->inicio = NULL;
+            lista->fim = NULL;
+            lista->qtd--;
+            printf("Remoção efetuada!\n");
+        } else {
+            lista->inicio = lista->inicio->prox;
+            lista->inicio->ant = lista->fim;
+            lista->fim->prox = lista->inicio;
+            lista->qtd--;
+            free(aux->info);
+            free(aux);
+            printf("Remoção efetuada!\n");
+        }
+    } else if (aux == lista->fim) {
+        if (lista->fim == lista->inicio) {
+            free(lista->fim->info);
+            free(lista->fim);
+            lista->fim = NULL;
+            lista->inicio = NULL;
+            lista->qtd--;
+            printf("Remoção efetuada!\n");
+        } else {
+            lista->fim = lista->fim->ant;
+            lista->fim->prox = lista->inicio;
+            lista->inicio->ant = lista->fim;
+            lista->qtd--;
+            free(aux->info);
+            free(aux);
+            printf("Remoção efetuada!\n");
+        }
+    } else {
+        aux->ant->prox = aux->prox;
+        aux->prox->ant = aux->ant;
+        lista->qtd--;
+        free(aux->info);
+        free(aux);
+        printf("Remoção efetuada!\n");
+    }
 }
 
-void limpar() {
-    // EM DESENVOLVIMENTO
+void removerInicio(LDECircular *lista) {
+    Node *aux = lista->inicio;
+    if (lista->qtd == 1) {
+        free(lista->inicio->info);
+        free(lista->inicio);
+        lista->inicio = NULL;
+        lista->fim = NULL;
+    } else {
+        lista->inicio = lista->inicio->prox;
+        lista->inicio->ant = lista->fim;
+        lista->fim->prox = lista->inicio;
+        free(aux->info);
+        free(aux);
+    }
+    lista->qtd--;
+}
+
+void limpar(LDECircular *lista) {
+    int iteracoes = lista->qtd;
+    for (int i = 0; i < iteracoes; i++) {
+        printf("%d\n", lista->qtd);
+        removerInicio(lista);
+    }
+    printf("Cadastro limpado com sucesso!\n");
 }
 
 void exibirOpcoes() {
     printf("Menu de opções:\n");
     printf("1 - Cadastrar novo aluno\n");
     printf("2 - Listar alunos de uma turma\n");
-    printf("3 - Consultar aluno\n");
-    printf("4 - Alterar média final de um aluno\n");
-    printf("5 - Alterar a quantidade de faltas de um aluno\n");
-    printf("6 - Exibir dados de um aluno\n");
-    printf("7 - Remover um aluno\n");
-    printf("8 - Limpar cadastro de uma turma\n");
-    printf("9 - DEBUG consultar\n");
+    printf("3 - Alterar média final de um aluno\n");
+    printf("4 - Alterar a quantidade de faltas de um aluno\n");
+    printf("5 - Exibir dados de um aluno\n");
+    printf("6 - Remover um aluno\n");
+    printf("7 - Limpar cadastro de uma turma\n");
     printf("0 - Encerrar\n");
     printf("Escolha uma opção: ");
 }
 
 int main() {
-    LDECircular turma1, turma2;
+    LDECircular turma1, turma2, *aux;
 
     inicializar(&turma1);
     inicializar(&turma2);
 
     int op, op2, num;
-    char aux[100];
+    char auxiliar[100];
 
     do {
         exibirOpcoes();
@@ -251,22 +337,134 @@ int main() {
             }
             break;
         case 3: // NAO PODE ESTAR VAZIA
+            printf("Informe a turma na qual quer alterar a média de um aluno (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    if (isEmpty(turma1) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno que deseja alterar a média: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        alterarMediaFinal(&turma1, auxiliar);
+                    }
+                    break;
+                case 2:
+                    if (isEmpty(turma2) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno que deseja alterar a média: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        alterarMediaFinal(&turma2, auxiliar);
+                    }
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
+            }
             break;
         case 4:
+            printf("Informe a turma na qual quer alterar a quantidade de faltas de um aluno (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    if (isEmpty(turma1) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno que deseja alterar a quantidade de faltas: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        alterarQtdFaltas(&turma1, auxiliar);
+                    }
+                    break;
+                case 2:
+                    if (isEmpty(turma2) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno que deseja alterar a quantidade de faltas: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        alterarQtdFaltas(&turma2, auxiliar);
+                    }
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
+            }
             break;
         case 5:
+            printf("Informe a turma na qual quer buscar um aluno (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    if (isEmpty(turma1) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        exibir(turma1, auxiliar);
+                    }
+                    break;
+                case 2:
+                    if (isEmpty(turma2) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        exibir(turma2, auxiliar);
+                    }
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
+            }
             break;
-        case 9:
-            printf("DEBUGANDO BUSCA INFORME NOME:\n");
-            fgets(aux, sizeof(aux), stdin);
-            if (consultar(turma1, aux) == NULL && consultar(turma2, aux) == NULL) {
-                printf("Aluno nao esta em nenhuma turma\n");
-            } else if (consultar(turma1, aux) != NULL && consultar(turma2, aux) == NULL) {
-                printf("Aluno esta na turma 1!\n");
-            } else if (consultar(turma1, aux) == NULL && consultar(turma2, aux) != NULL) {
-                printf("Aluno esta na turma 2!\n");
-            } else if (consultar(turma1, aux) != NULL && consultar(turma2, aux) != NULL) {
-                printf("Aluno esta nas duas turmas!\n");
+        case 6:
+            printf("Informe a turma na qual quer remover um aluno (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    if (isEmpty(turma1) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno a se removido: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        remover(&turma1, auxiliar);
+                    }
+                    break;
+                case 2:
+                    if (isEmpty(turma2) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        printf("Informe o nome do aluno a ser removido: ");
+                        fgets(auxiliar, sizeof(auxiliar), stdin);
+                        remover(&turma2, auxiliar);
+                    }
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
+            }
+            break;
+        case 7:
+            printf("Informe a turma que deseja limpar (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    if (isEmpty(turma1) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        limpar(&turma1);
+                    }
+                    break;
+                case 2:
+                    if (isEmpty(turma2) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        limpar(&turma2);
+                    }
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
             }
             break;
         case 0: 
