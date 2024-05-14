@@ -149,8 +149,17 @@ Node* consultar(LDECircular lista, char nomeAluno[]) {
         return lista.fim;
     } else if (stricmp(lista.fim->info->nome, nomeAluno) < 0) {
         return NULL;
-    } else { // BUSCA NO MEIO, EM DESENVOLVIMENTO
-
+    } else {
+        aux = lista.inicio->prox;
+        while (1) {
+            if (stricmp(aux->info->nome, nomeAluno) == 0) {
+                return aux;
+            } else if (stricmp(aux->info->nome, nomeAluno) > 0) {
+                return NULL;
+            } else {
+                aux = aux->prox;
+            }
+        }
     }
 }
 
@@ -184,6 +193,7 @@ void exibirOpcoes() {
     printf("6 - Exibir dados de um aluno\n");
     printf("7 - Remover um aluno\n");
     printf("8 - Limpar cadastro de uma turma\n");
+    printf("9 - DEBUG consultar\n");
     printf("0 - Encerrar\n");
     printf("Escolha uma opção: ");
 }
@@ -195,6 +205,7 @@ int main() {
     inicializar(&turma2);
 
     int op, op2, num;
+    char aux[100];
 
     do {
         exibirOpcoes();
@@ -244,6 +255,19 @@ int main() {
         case 4:
             break;
         case 5:
+            break;
+        case 9:
+            printf("DEBUGANDO BUSCA INFORME NOME:\n");
+            fgets(aux, sizeof(aux), stdin);
+            if (consultar(turma1, aux) == NULL && consultar(turma2, aux) == NULL) {
+                printf("Aluno nao esta em nenhuma turma\n");
+            } else if (consultar(turma1, aux) != NULL && consultar(turma2, aux) == NULL) {
+                printf("Aluno esta na turma 1!\n");
+            } else if (consultar(turma1, aux) == NULL && consultar(turma2, aux) != NULL) {
+                printf("Aluno esta na turma 2!\n");
+            } else if (consultar(turma1, aux) != NULL && consultar(turma2, aux) != NULL) {
+                printf("Aluno esta nas duas turmas!\n");
+            }
             break;
         case 0: 
             printf("Fim de programa! \n");

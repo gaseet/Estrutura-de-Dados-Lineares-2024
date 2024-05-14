@@ -137,6 +137,7 @@ void removerEspecificoMELHOR (LSE *lista, int valor) {
             if (valor == atual->info) {
                 if (atual == lista->fim) {
                     anterior->prox = lista->inicio;
+                    lista->fim = anterior; // LEMBRA DE ATUALIZAR O FIMMMMM
                 } else {
                     anterior->prox = atual->prox;
                 }
@@ -154,6 +155,60 @@ void removerEspecificoMELHOR (LSE *lista, int valor) {
     }
 }
 
+void removerEspecificoMELHOR2 (LSE *lista, int valor) {
+    TNoLSE *atual, *anterior;
+    atual = lista->inicio;
+    anterior = NULL;
+    if (valor == lista->inicio->info) {
+        if (lista->inicio == lista->fim) {
+            lista->inicio = NULL;
+            lista->fim = NULL;
+            lista->qtd--;
+            free(atual);
+        } else {
+            lista->inicio = lista->inicio->prox;
+            lista->fim->prox = lista->inicio;
+            lista->qtd--;
+            free(atual);
+        }
+    } else if (valor < lista->inicio->info) {
+        printf("Valor não encontrado!\n");
+    } else if (valor > lista->fim->info) {
+        printf("Valor não encontrado!\n");
+    } else {
+        anterior = atual;
+        atual = atual->prox;
+        for (int i = 0; i < lista->qtd; i++) {
+            if (valor == atual->info) {
+                if (atual == lista->fim) {
+                    anterior->prox = lista->inicio;
+                    lista->fim = anterior; // LEMBRA DE ATUALIZAR O FIMMMMM
+                } else {
+                    anterior->prox = atual->prox;
+                }
+                lista->qtd--;
+                free(atual);
+                return;
+            } else if (valor < atual->info) {
+                printf("Valor não encontrado!\n");
+                return;
+            } else {
+                anterior = atual;
+                atual = atual->prox;
+            }
+        }
+    }
+}
+
+int removerEspecificoTODOS (LSE *lista, int valor) {
+    int qtd = 0;
+    while (busca(*lista, valor) != NULL) {
+        removerEspecificoMELHOR2(lista, valor);
+        qtd++;
+    }
+    return qtd;
+}
+
 void exibirListaCircular(LSE lista) {
     TNoLSE *aux = lista.inicio;
     if (aux != NULL) {
@@ -168,7 +223,7 @@ void exibirListaCircular(LSE lista) {
 void exibirListaCircularTeste(LSE lista) {
     TNoLSE *aux = lista.inicio;
     if (aux != NULL) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < (lista.qtd * 2); i++) {
             printf("%d ", aux->info);
             aux = aux->prox; 
         }
@@ -189,18 +244,24 @@ void exibirListaCircularINFINITO(LSE lista) {
 int main() {
     LSE lista;
     inicializar(&lista);
+    int qtd;
 
     inserirOrdenado(&lista, 1);
     inserirOrdenado(&lista, 3);
     inserirOrdenado(&lista, 2);
     inserirOrdenado(&lista, 5);
+    inserirOrdenado(&lista, 5);
+    inserirOrdenado(&lista, 5);
+    inserirOrdenado(&lista, 5);
     inserirOrdenado(&lista, 4);
     
-    removerEspecificoMELHOR(&lista, 5);
+    //removerEspecificoMELHORGPT(&lista, 5);
+    qtd = removerEspecificoTODOS(&lista, 5);
+    printf("%d\n", qtd);
 
     exibirListaCircularTeste(lista);
     exibirListaCircular(lista);
-    exibirListaCircularINFINITO(lista);
+    //exibirListaCircularINFINITO(lista);
 
     return 0;
 }
