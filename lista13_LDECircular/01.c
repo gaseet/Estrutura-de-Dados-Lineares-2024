@@ -42,12 +42,14 @@ Aluno* criarAluno(char nome[]) {
     strcpy(novoAluno->nome, nome);
     printf("Informe a média do aluno: ");
     scanf("%f", &novoAluno->mediaFinal);
+    getchar();
     printf("Informe a quantidade de faltas do aluno: ");
     scanf("%d", &novoAluno->qtdFaltas);
+    getchar();
     return novoAluno;
 }
 
-Node* criarNo(Aluno *aluno) {
+Node* criarNode(Aluno *aluno) {
     Node *novoNo = (Node*)malloc(sizeof(Node));
     novoNo->ant = NULL;
     novoNo->info = aluno;
@@ -62,7 +64,7 @@ void cadastrar(LDECircular *lista) {
     Node *aux;
     int retorno;
     printf("Informe o nome do aluno: ");
-    gets_s(nomeAux);
+    fgets(nomeAux, sizeof(nomeAux), stdin);
     if (isEmpty(*lista) == TRUE) {
         novoAluno = criarAluno(nomeAux);
         novoNo = criarNode(novoAluno);
@@ -74,7 +76,7 @@ void cadastrar(LDECircular *lista) {
         printf("Inserção efetuada!\n");
         return;
     } else if (stricmp(lista->inicio->info->nome, nomeAux) == 0) {
-        printf("Aluno já cadastrado\n");
+        printf("Aluno já cadastrado!\n");
         return;
     } else if (stricmp(lista->inicio->info->nome, nomeAux) > 0) { // INSERE NO INICIO
         novoAluno = criarAluno(nomeAux);
@@ -88,7 +90,7 @@ void cadastrar(LDECircular *lista) {
         printf("Inserção efetuada!\n");
         return;
     } else if (stricmp(lista->fim->info->nome, nomeAux) == 0) {
-        printf("Aluno já cadastrado\n");
+        printf("Aluno já cadastrado!\n");
         return;
     } else if (stricmp(lista->fim->info->nome, nomeAux) < 0) { // INSERE NO FIM
         novoAluno = criarAluno(nomeAux);
@@ -106,7 +108,7 @@ void cadastrar(LDECircular *lista) {
         while (aux != lista->inicio) {
             retorno = stricmp (aux->info->nome, nomeAux);
             if (retorno == 0) {
-                printf("Aluno já cadastrado\n");
+                printf("Aluno já cadastrado!\n");
                 return;
             } else if (retorno > 0) {
                 novoAluno = criarAluno(nomeAux);
@@ -125,12 +127,31 @@ void cadastrar(LDECircular *lista) {
     }
 }
 
-void listar() {
-    // EM DESENVOLVIMENTO
+void listar(LDECircular lista) {
+    Node *aux = lista.inicio;
+    printf("----------------------\n");
+    for (int i = 0; i < lista.qtd; i++) {
+        printf("Nome: %s", aux->info->nome);
+        printf("Média final: %.2f\n", aux->info->mediaFinal);
+        printf("Faltas: %d\n", aux->info->qtdFaltas);
+        printf("----------------------\n");
+        aux = aux->prox;
+    }
 }
 
-void consultar() {
-    // EM DESENVOLVIMENTO
+Node* consultar(LDECircular lista, char nomeAluno[]) {
+    Node *aux;
+    if (stricmp(lista.inicio->info->nome, nomeAluno) == 0) {
+        return lista.inicio;
+    } else if (stricmp(lista.inicio->info->nome, nomeAluno) > 0) {
+        return NULL;
+    } else if (stricmp(lista.fim->info->nome, nomeAluno) == 0) {
+        return lista.fim;
+    } else if (stricmp(lista.fim->info->nome, nomeAluno) < 0) {
+        return NULL;
+    } else { // BUSCA NO MEIO, EM DESENVOLVIMENTO
+
+    }
 }
 
 void alterarMediaFinal() {
@@ -153,11 +174,83 @@ void limpar() {
     // EM DESENVOLVIMENTO
 }
 
+void exibirOpcoes() {
+    printf("Menu de opções:\n");
+    printf("1 - Cadastrar novo aluno\n");
+    printf("2 - Listar alunos de uma turma\n");
+    printf("3 - Consultar aluno\n");
+    printf("4 - Alterar média final de um aluno\n");
+    printf("5 - Alterar a quantidade de faltas de um aluno\n");
+    printf("6 - Exibir dados de um aluno\n");
+    printf("7 - Remover um aluno\n");
+    printf("8 - Limpar cadastro de uma turma\n");
+    printf("0 - Encerrar\n");
+    printf("Escolha uma opção: ");
+}
+
 int main() {
     LDECircular turma1, turma2;
 
-    cadastrar(&turma1);
-    cadastrar(&turma2);
+    inicializar(&turma1);
+    inicializar(&turma2);
 
+    int op, op2, num;
+
+    do {
+        exibirOpcoes();
+        scanf("%d", &op);
+        getchar();
+        switch (op) {
+        case 1: 
+            printf("Informe a turma na qual quer cadastrar um aluno (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    cadastrar(&turma1);
+                    break;
+                case 2:
+                    cadastrar(&turma2);
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
+            }
+            break;
+        case 2: // NAO PODE ESTAR VAZIA
+            printf("Informe a turma que deseja listar (1 ou 2): ");
+            scanf("%d", &op2);
+            getchar();
+            switch (op2) {
+                case 1:
+                    if (isEmpty(turma1) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        listar(turma1);
+                    }
+                    break;
+                case 2:
+                    if (isEmpty(turma2) == TRUE) {
+                        printf("Erro: Turma vazia!\n");
+                    } else {
+                        listar(turma2);
+                    }
+                    break;
+                default:
+                    printf("Turma inválida! Informe 1 ou 2\n");
+            }
+            break;
+        case 3: // NAO PODE ESTAR VAZIA
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 0: 
+            printf("Fim de programa! \n");
+            break;
+        default: 
+            printf("Opção inválida! \n");
+        }
+    } while (op != 0);
     return 0;
 }
