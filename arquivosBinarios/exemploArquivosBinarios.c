@@ -12,7 +12,7 @@ int main() {
     int retorno;
     printf("Informe o nome do arquivo: ");
     fgets(nomeArq, sizeof(nomeArq), stdin);
-    nomeArq[strcspn(nomeArq, "\n")] = '0'; // REMOVE \n
+    nomeArq[strcspn(nomeArq, "\n")] = '\0'; // REMOVE \n
     arq = fopen(nomeArq, "r+b");
     if (arq == NULL) {
         printf("Arquivo não existente, criando um!\n");
