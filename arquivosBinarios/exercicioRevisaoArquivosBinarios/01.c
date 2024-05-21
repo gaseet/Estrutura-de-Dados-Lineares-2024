@@ -173,7 +173,7 @@ void alterarFaltas(FILE* arq, char RA[]) {
     int posicao = busca(arq, RA); // Cursor de registro aponta para o depois do aluno encontrado (Se encontrado)
     int retorno;
     if (posicao != -1) {
-        fseek(arq, posicao * sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
+        fseek(arq, posicao * sizeof(TAluno), SEEK_SET); // Move cursor de volta para o aluno desejado
 
         retorno = fread(&aux, sizeof(TAluno), 1, arq); // Lê a informação do aluno desejado
 
@@ -200,13 +200,13 @@ void removerAluno(FILE* arq, char RA[]) {
     // Em desenvolvimento: Busca no arquivo um aluno com o RA dado. 
     // Se encontrar, remove logicamente o aluno, seja, altera o status para 0 (deletado).
     // Se não encontrar, informa que o aluno não pertence a turma.
-    TAluno aux;
+        TAluno aux;
     int posicao = busca(arq, RA); // Cursor de registro aponta para o depois do aluno encontrado (Se encontrado)
     int retorno;
     if (posicao != -1) {
-        fseek(arq, -sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
+        fseek(arq, posicao * sizeof(TAluno), SEEK_SET); // Move cursor de volta para o aluno desejado
 
-        fseek(arq, posicao * sizeof(TAluno), SEEK_CUR); // Lê a informação do aluno desejado
+        retorno = fread(&aux, sizeof(TAluno), 1, arq); // Lê a informação do aluno desejado
 
         if (retorno == 1) {
             fseek(arq, -sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
@@ -228,10 +228,45 @@ void removerAluno(FILE* arq, char RA[]) {
 }
 
 void limparArquivo(FILE* arq) { 
-    // Em desenvolvimento: remove fisicamente do arquivo os registros de status 0.
-    // (Cria outro arquivo e transfere os de status 1 pra lá, depois fecha os dois, 
-    // apaga o primeiro, e renomeia o segundo pra o nome do primeiro)
+    FILE *temp;
+    TAluno aux;
+    int retorno;
+    char nomeAux[100] = "auxiliar.dat";
+    
+    // Cria e abre o arquivo temporário
+    temp = fopen(nomeAux, "r+b");
+    if (temp == NULL) {
+        temp = fopen(nomeAux, "w+b");
+    }
+    
+    // Move o ponteiro para o início do arquivo original
+    fseek(arq, 0, SEEK_SET);
+    
+    // Lê cada registro do arquivo original e escreve os ativos no temporário
+    while (fread(&aux, sizeof(TAluno), 1, arq) == 1) {
+        if (aux.status == 1) {
+            if (fwrite(&aux, sizeof(TAluno), 1, temp) != 1) {
+                printf("Erro ao escrever no arquivo temporário\n");
+                fclose(temp);
+                return;
+            }
+        }
+    }
+    
+    // Fecha ambos os arquivos
+    fclose(arq);
+    fclose(temp);
+    
+    // Remove o arquivo original e renomeia o temporário
+    if (remove("prog1.dat") != 0) {
+        printf("Erro ao remover o arquivo original\n");
+        return;
+    }
+    if (rename(nomeAux, "prog1.dat") != 0) {
+        printf("Erro ao renomear o arquivo temporário\n");
+    }
 }
+
 
 int main() {
     FILE* turma;
@@ -279,6 +314,7 @@ int main() {
                 removerAluno(turma, ra);
                 break;
             case 0: 
+                printf("Programa encerrado!\n");
                 limparArquivo(turma);
                 break;
             default: 
