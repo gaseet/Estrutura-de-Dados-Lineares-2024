@@ -40,11 +40,11 @@ int isFileEmpty(FILE *arq) {
     return tamanho == 0; // Retorna 1 se o arquivo estiver vazio, 0 caso contrário
 }
 
-int isFileEmptyTESTE() {
+int isFileEmptyTESTE() { // Possivel isEmpty mais optimo
     return indiceAtual == 0;
 }
 
-int onlyDeletedAlunos(FILE *arq) {
+int onlyDeletedAlunos(FILE *arq) { // Arquivo pode não estar vazio mas conter apenas alunos deletados
     TAluno aux;
     fseek(arq, 0, SEEK_SET);
     int alunoNaoDeletado = 1;
@@ -80,7 +80,7 @@ FILE* prepararArquivo(char nomeArq[]) {
     return arq;
 }
 
-int busca (FILE *arq, char RA[12]) {
+int busca (FILE *arq, char RA[12]) { // Substituir pelo uso da funcao hash
     TAluno aux;
     int pos = -1;
     int retorno;
