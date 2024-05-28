@@ -29,16 +29,66 @@ typedef struct tabelahash { // Tamanho fixo
     int maiorLinha;
 } tabelaHash;
 
+int hALfa (char *chv) {
+    int i, soma = 0, tam = strlen(chv);
+    for (i = 0; i < tam; i++) {
+        soma = soma + chv[i];
+    }
+    return (soma % QTDLINHAS);
+}
 
+int isLinhaEmpty(linhaTabela linha) {
+    if (linha.primeiraCasa == NULL && linha.ultimaCasa == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
+void inicializarTabela(tabelaHash *tabela) {
+    for (int i = 0; i < QTDLINHAS; i++) {
+        tabela->linhas[i].primeiraCasa = NULL;
+        tabela->linhas[i].ultimaCasa = NULL;
+        tabela->linhas[i].qtdCasas = 0;
+    }
+    tabela->maiorLinha = -1;
+    tabela->menorLinha = -1;
+}
 
+void inserirChaveTabela(tabelaHash *tabela) {
+    // Em desenvolvimento
+}
 
+void removerChaveTabela(tabelaHash *tabela) {
+    // Em desenvolvimento
+}
 
+void exibirTabela(tabelaHash tabela) {
+    printf("--------------------\n");
+    for (int i = 0; i < QTDLINHAS; i++) {
+        printf("LINHA %d:\n", i);
+        printf("Endereço da primeira casa: %p\n", tabela.linhas[i].primeiraCasa);
+        printf("Endereço da ultima casa:   %p\n", (void*)tabela.linhas[i].ultimaCasa);
+        printf("Quantidade de casas: %d\n", tabela.linhas[i].qtdCasas);
+        printf("--------------------\n");
+    }
+}
 
+void exibirTabelaDEBUG(tabelaHash tabela) {
+    printf("--------------------\n");
+    for (int i = 0; i < QTDLINHAS; i++) {
+        if (isLinhaEmpty(tabela.linhas[i]) == 1) {
+            printf("LINHA %d:\n", i);
+            printf("Endereço da primeira casa: %p\n", tabela.linhas[i].primeiraCasa);
+            printf("Endereço da ultima casa:   %p\n", (void*)tabela.linhas[i].ultimaCasa);
+            printf("Quantidade de casas: %d\n", tabela.linhas[i].qtdCasas);
+            printf("--------------------\n");
+        }
+    }
+}
 
-
-typedef struct aluno { // Registros que vão ficar no arquivo
-    int matriculaChave;
+typedef struct aluno {
+    char matriculaChave[12];
     char nome[100];
     float media;
     int faltas;
@@ -46,4 +96,6 @@ typedef struct aluno { // Registros que vão ficar no arquivo
 
 int main() {
     tabelaHash tabela;
+    inicializarTabela(&tabela);
+    exibirTabela(tabela);
 }

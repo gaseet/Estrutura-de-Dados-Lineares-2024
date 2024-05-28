@@ -25,21 +25,23 @@ int hALfa (char *chv) {
 
 // Utilizado pra guardar o "índice" atual do arquivo,
 // para não ter que percorrer toda vez que escreve no arquivo pra encontrar o índice
-int indiceAtual = -1;
+int indiceAtual;
 // Será utilizado na hora de guardar cada chave na tabela de hashing, para guardar a posição do registro no arquivo
 
 void inicializarIndiceGlobal(FILE *arq) {
-    TAluno aux;
-    do {
-        fread(&aux, sizeof(TAluno), 1, arq);
-        indiceAtual++;
-    } while (!feof(arq));
+    fseek(arq, 0, SEEK_END); // Move o ponteiro para o final do arquivo
+    int tamanho = ftell(arq); // Obtém a posição atual do ponteiro (tamanho do arquivo em bytes)
+    indiceAtual = tamanho / sizeof(TAluno); // Calcula o índice com base no tamanho do arquivo
 }
 
 int isFileEmpty(FILE *arq) {
     fseek(arq, 0, SEEK_END); // Move o ponteiro para o final do arquivo
     int tamanho = ftell(arq); // Obtém a posição atual do ponteiro (tamanho do arquivo)
     return tamanho == 0; // Retorna 1 se o arquivo estiver vazio, 0 caso contrário
+}
+
+int isFileEmptyTESTE() {
+    return indiceAtual == 0;
 }
 
 int onlyDeletedAlunos(FILE *arq) {
@@ -197,7 +199,7 @@ void alterarMedia(FILE* arq, char RA[]) {
         retorno = fread(&aux, sizeof(TAluno), 1, arq); // Lê a informação do aluno desejado
 
         if (retorno == 1) {
-            fseek(arq, -sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
+            fseek(arq, -(long)sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
 
             printf("Informe a nova média do aluno: ");
             scanf("%f", &aux.media);
@@ -227,7 +229,7 @@ void alterarFaltas(FILE* arq, char RA[]) {
         retorno = fread(&aux, sizeof(TAluno), 1, arq); // Lê a informação do aluno desejado
 
         if (retorno == 1) {
-            fseek(arq, -sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
+            fseek(arq, -(long)sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
 
             printf("Informe a nova quantidade de faltas do aluno: ");
             scanf("%d", &aux.faltas);
@@ -258,7 +260,7 @@ void removerAluno(FILE* arq, char RA[]) {
         retorno = fread(&aux, sizeof(TAluno), 1, arq); // Lê a informação do aluno desejado
 
         if (retorno == 1) {
-            fseek(arq, -sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
+            fseek(arq, -(long)sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
 
             aux.status = 0;
 
@@ -321,7 +323,8 @@ int main() {
     FILE* turma;
     char nomeFile[100] = "progteste.dat";
     char ra [12];
-    int op;
+    int op = -1;
+    int c;
     turma = prepararArquivo (nomeFile);
     if (turma == NULL) {
         printf("Erro ao tentar criar/abrir o arquivo \n");
@@ -334,9 +337,9 @@ int main() {
         } else {
             inicializarIndiceGlobal(turma);
             do {
-                printf("Índice atual do arquivo: %d\n", indiceAtual); 
+                printf("Indice atual do arquivo: %d\n", indiceAtual); 
                 exibirOpcoes();
-                scanf("%d", &op); 
+                scanf("%d", &op);
                 fflush(stdin);
                 switch (op) {
                 case 1: 
@@ -378,7 +381,7 @@ int main() {
                     limparArquivo(turma);
                     break;
                 default: 
-                    printf("Opção inválida \n");
+                    printf("Opção inválida!\n");
                 }
             } while (op != 0);
         }
