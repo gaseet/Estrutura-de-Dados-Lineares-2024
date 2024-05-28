@@ -12,7 +12,7 @@
 
 typedef struct casatabela { // Dinamicamente alocado;
     char chave[50]; // Dado pra função de hash para receber a linha na qual será inserida na tabela
-    int posicaoNoArquivo;
+    int posicaoNoArquivo; // "Offset" no arquivo (Que deverá ser multiplicado pelo sizeof(struct(Aluno)))
     struct casatabela *ant;
     struct casatabela *prox;
 } casaTabela;
