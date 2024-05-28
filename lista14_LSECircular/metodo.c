@@ -1,3 +1,11 @@
+int isEmpty(LSECircular lista) {
+    if (lista.inicio == NULL && lista.fim == NULL) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
 void removerEspecificoMELHOR2 (LSE *lista, int valor) {
     TNoLSE *atual, *anterior;
     atual = lista->inicio;
@@ -45,7 +53,7 @@ void removerEspecificoMELHOR2 (LSE *lista, int valor) {
 
 int removerEspecificoTODOS (LSE *lista, int valor) {
     int qtd = 0;
-    while (busca(*lista, valor) != NULL) {
+    while (isEmpty(*lista) == FALSE && busca(*lista, valor) != NULL) {
         removerEspecificoMELHOR2(lista, valor);
         qtd++;
     }
