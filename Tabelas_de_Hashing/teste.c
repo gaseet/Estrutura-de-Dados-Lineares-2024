@@ -8,7 +8,7 @@
 // HashTable com ordenação de cada classe ("linha" da tabela). 
 // (Se duas chaves ou mais receberem a mesma classe, elas ficarão crescentemente ordenadas)
 
-#define QTDLINHAS 10
+#define QTDLINHAS 10 // qtd exemplo
 
 typedef struct casatabela { // Dinamicamente alocado;
     char chave[50]; // Dado pra função de hash para receber a linha na qual será inserida na tabela
@@ -34,6 +34,7 @@ int hALfa (char *chv) {
     for (i = 0; i < tam; i++) {
         soma = soma + chv[i];
     }
+    printf("%d\n", soma % QTDLINHAS);
     return (soma % QTDLINHAS);
 }
 
@@ -43,6 +44,181 @@ int isLinhaEmpty(linhaTabela linha) {
     } else {
         return 0;
     }
+}
+
+casaTabela* criarCasaTabela(char *chv, int posicao) {
+    casaTabela *novoNo = (casaTabela*)malloc(sizeof(casaTabela));
+    novoNo->ant = NULL;
+    strcpy(novoNo->chave, chv);
+    novoNo->posicaoNoArquivo = posicao;
+    novoNo->prox = NULL;
+    return novoNo;
+}
+
+// Parâmetros:
+// - a linha na qual vai ser inserida
+// - a chave que vai ser dada pra a funcao hash (nesse caso vai ser so guardada, 
+//   vai ser dado pra h(x) antes de chamar a funcao pra descobrir em qual linha guardar)
+// - a posicao do registro no arquivo
+void inserirNaLinha(linhaTabela *lista, char *chv, int posicao) {
+    casaTabela *novoNo, *aux;
+    int retorno;
+    if (isLinhaEmpty(*lista) == 1) {
+        novoNo = criarCasaTabela(chv, posicao);
+        lista->primeiraCasa = novoNo;
+        lista->ultimaCasa = novoNo;
+        lista->qtdCasas++;
+        printf("Inserção efetuada!\n");
+        return;
+    } else if (stricmp(lista->primeiraCasa->chave, chv) == 0) {
+        printf("Erro! Chave já presente na lista!\n");
+        return;
+    } else if (stricmp(lista->primeiraCasa->chave, chv) > 0) { // INSERE NO INICIO
+        novoNo = criarCasaTabela(chv, posicao);
+        lista->primeiraCasa->ant = novoNo;
+        novoNo->prox = lista->primeiraCasa;
+        lista->primeiraCasa = novoNo;
+        lista->qtdCasas++;
+        printf("Inserção efetuada!\n");
+        return;
+    } else if (stricmp(lista->ultimaCasa->chave, chv) == 0) {
+        printf("Erro! Chave já presente na lista!\n");
+        return;
+    } else if (stricmp(lista->ultimaCasa->chave, chv) < 0) { // INSERE NO FIM
+        novoNo = criarCasaTabela(chv, posicao);
+        lista->ultimaCasa->prox = novoNo;
+        novoNo->ant = lista->ultimaCasa;
+        lista->ultimaCasa = novoNo;
+        lista->qtdCasas++;
+        printf("Inserção efetuada!\n");
+        return;
+    } else { // INSERE NO "MEIO"
+        aux = lista->primeiraCasa->prox;
+        while (aux != NULL) {
+            retorno = stricmp (aux->chave, chv);
+            if (retorno == 0) {
+                printf("Erro! Chave já presente na lista!\n");
+                return;
+            } else if (retorno > 0) {
+                novoNo = criarCasaTabela(chv, posicao);
+                novoNo->prox = aux;
+                novoNo->ant = aux->ant;
+                aux->ant->prox = novoNo;
+                aux->ant = novoNo;
+                lista->qtdCasas++;
+                printf("Inserção efetuada!\n");
+                return;
+            } else {
+                aux = aux->prox;
+            }
+        }
+    }
+}
+
+void inserirNaTabela(tabelaHash *tabela, char *chv, int posicao) {
+    int qualLinha = hALfa(chv);
+    inserirNaLinha(&tabela->linhas[qualLinha], chv, posicao);
+    if (tabela->maiorLinha == -1) {
+        tabela->maiorLinha = qualLinha;
+    }
+
+    if (tabela->menorLinha == -1) {
+        tabela->menorLinha = qualLinha;
+    }
+
+    if (tabela->linhas[qualLinha].qtdCasas > tabela->linhas[tabela->maiorLinha].qtdCasas) {
+        tabela->maiorLinha = qualLinha;
+    }
+
+    if (tabela->linhas[qualLinha].qtdCasas < tabela->linhas[tabela->menorLinha].qtdCasas || tabela->menorLinha == -1) {
+        tabela->menorLinha = qualLinha;
+    }
+}
+
+casaTabela* consultarNaLinha(linhaTabela lista, char* chv) {
+    casaTabela *aux;
+    if (stricmp(lista.primeiraCasa->chave, chv) == 0) {
+        return lista.primeiraCasa;
+    } else if (stricmp(lista.primeiraCasa->chave, chv) > 0) {
+        return NULL;
+    } else if (stricmp(lista.ultimaCasa->chave, chv) == 0) {
+        return lista.ultimaCasa;
+    } else if (stricmp(lista.ultimaCasa->chave, chv) < 0) {
+        return NULL;
+    } else {
+        aux = lista.primeiraCasa->prox;
+        while (1) {
+            if (stricmp(aux->chave, chv) == 0) {
+                return aux;
+            } else if (stricmp(aux->chave, chv) > 0) {
+                return NULL;
+            } else {
+                aux = aux->prox;
+            }
+        }
+    }
+}
+
+void removerNaLinha(linhaTabela *lista, char *chv) {
+    casaTabela *aux = consultarNaLinha(*lista, chv);
+    if (aux == NULL) {
+        printf("Chave não encontrada na linha!\n");
+    } else if (aux == lista->primeiraCasa) {
+        if (lista->primeiraCasa == lista->ultimaCasa) {
+            lista->primeiraCasa = NULL;
+            lista->ultimaCasa = NULL;
+            lista->qtdCasas--;
+            free(aux);
+            printf("Remoção efetuada!\n");
+        } else {
+            lista->primeiraCasa = lista->primeiraCasa->prox;
+            lista->primeiraCasa->ant = NULL;
+            lista->qtdCasas--;
+            free(aux);
+            printf("Remoção efetuada!\n");
+        }
+    } else if (aux == lista->ultimaCasa) {
+        if (lista->ultimaCasa == lista->primeiraCasa) {
+            lista->ultimaCasa = NULL;
+            lista->primeiraCasa = NULL;
+            lista->qtdCasas--;
+            free(aux);
+            printf("Remoção efetuada!\n");
+        } else {
+            lista->ultimaCasa = lista->ultimaCasa->ant;
+            lista->ultimaCasa->prox = NULL;
+            lista->qtdCasas--;
+            free(aux);
+            printf("Remoção efetuada!\n");
+        }
+    } else {
+        aux->ant->prox = aux->prox;
+        aux->prox->ant = aux->ant;
+        lista->qtdCasas--;
+        free(aux);
+        printf("Remoção efetuada!\n");
+    }
+}
+
+void atualizarMaiorEMenorLinha(tabelaHash *tabela) {
+    int i;
+    tabela->maiorLinha = 0;
+    tabela->menorLinha = 0;
+
+    for (i = 1; i < QTDLINHAS; i++) {
+        if (tabela->linhas[i].qtdCasas > tabela->linhas[tabela->maiorLinha].qtdCasas) {
+            tabela->maiorLinha = i;
+        }
+        if (tabela->linhas[i].qtdCasas < tabela->linhas[tabela->menorLinha].qtdCasas) {
+            tabela->menorLinha = i;
+        }
+    }
+}
+
+void removerNaTabela(tabelaHash *tabela, char *chv) {
+    int qualLinha = hALfa(chv);
+    removerNaLinha(&tabela->linhas[qualLinha], chv);
+    atualizarMaiorEMenorLinha(tabela);
 }
 
 void inicializarTabela(tabelaHash *tabela) {
@@ -55,15 +231,7 @@ void inicializarTabela(tabelaHash *tabela) {
     tabela->menorLinha = -1;
 }
 
-void inserirChaveTabela(tabelaHash *tabela) {
-    // Em desenvolvimento
-}
-
-void removerChaveTabela(tabelaHash *tabela) {
-    // Em desenvolvimento
-}
-
-void exibirTabela(tabelaHash tabela) {
+void exibirTabelaDEBUG(tabelaHash tabela) {
     printf("--------------------\n");
     for (int i = 0; i < QTDLINHAS; i++) {
         printf("LINHA %d:\n", i);
@@ -74,7 +242,7 @@ void exibirTabela(tabelaHash tabela) {
     }
 }
 
-void exibirTabelaDEBUG(tabelaHash tabela) {
+void exibirTabelaDEBUGEmpty(tabelaHash tabela) {
     printf("--------------------\n");
     for (int i = 0; i < QTDLINHAS; i++) {
         if (isLinhaEmpty(tabela.linhas[i]) == 1) {
@@ -97,5 +265,8 @@ typedef struct aluno {
 int main() {
     tabelaHash tabela;
     inicializarTabela(&tabela);
-    exibirTabela(tabela);
+    inserirNaTabela(&tabela, "123\0", 1);
+    inserirNaTabela(&tabela, "321\0", 1);
+    inserirNaTabela(&tabela, "312\0", 1);
+    exibirTabelaDEBUG(tabela);
 }
