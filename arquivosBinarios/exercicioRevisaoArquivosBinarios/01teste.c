@@ -63,11 +63,12 @@ int onlyDeletedAlunos(FILE *arq) { // Arquivo pode não estar vazio mas conter a
 
 void exibirOpcoes() {
     printf("1 - Cadastrar aluno \n");
-    printf("2 - Exibir alunos cadastrados \n");
-    printf("3 - Exibir os dados de um aluno \n");
-    printf("4 - Alterar a média de um aluno \n");
-    printf("5 - Alterar a quantidade de faltas de um aluno \n");
+    printf("2 - Exibir os dados de um aluno \n");
+    printf("3 - Alterar a média de um aluno \n");
+    printf("4 - Alterar a quantidade de faltas de um aluno \n");
+    printf("5 - Alterar o nome de um aluno \n");
     printf("6 - Remover um aluno do cadastro \n");
+    printf("7 - Exibir alunos cadastrados \n");
     printf("0 - Encerrar o programa \n");
 }
 
@@ -183,6 +184,38 @@ void exibirAluno(FILE* arq, char RA[]) {
     }
 
     if (encontrado == 0) {
+        printf("Aluno não encontrado na turma!\n");
+    }
+}
+
+void alterarNome(FILE* arq, char RA[]) {
+    // Em desenvolvimento: Busca no arquivo um aluno com o RA dado. Se encontrar, altera a média.
+    // Se não encontrar, informa que o aluno não pertence a turma.
+    TAluno aux;
+    int posicao = busca(arq, RA); // Cursor de registro aponta para o depois do aluno encontrado (Se encontrado)
+    int retorno;
+    if (posicao != -1) {
+        fseek(arq, posicao * sizeof(TAluno), SEEK_SET); // Move cursor de volta para o aluno desejado
+
+        retorno = fread(&aux, sizeof(TAluno), 1, arq); // Lê a informação do aluno desejado
+
+        if (retorno == 1) {
+            fseek(arq, -(long)sizeof(TAluno), SEEK_CUR); // Move cursor de volta para o aluno desejado
+
+            printf("Informe o novo nome do aluno: ");
+            fgets(aux.nome, sizeof(aux.nome), stdin);
+            aux.nome[strcspn(aux.nome, "\n")] = '\0';
+
+            retorno = fwrite(&aux, sizeof(TAluno), 1, arq);
+
+            if (retorno == 1) {
+                fflush(arq); // Força o "descarregamento" do buffer (Salva no arquivo ao invés de ficar na RAM)
+                printf("Nome alterada com sucesso!\n");
+            } else {
+                printf("Erro ao tentar gravar aluno!\n");
+            }
+        }
+    } else {
         printf("Aluno não encontrado na turma!\n");
     }
 }
@@ -346,35 +379,41 @@ int main() {
                     cadastrarAluno(turma);
                     break;
                 case 2: 
-                    if (!isFileEmpty(turma) && !onlyDeletedAlunos(turma)) {
-                        exibirTodos(turma);
-                    } else {
-                        printf("Arquivo está vazio!\n");
-                    }
-                    break;
-                case 3: 
                     printf("Informe o RA do aluno: ");
                     fgets(ra, sizeof(ra), stdin);
                     ra[strcspn(ra, "\n")] = '\0'; // REMOVE \n
                     exibirAluno(turma, ra);
                     break;
-                case 4: 
+                case 3: 
                     printf("Informe o RA do aluno: ");
                     fgets(ra, sizeof(ra), stdin);
                     ra[strcspn(ra, "\n")] = '\0'; // REMOVE \n
                     alterarMedia(turma, ra);
                     break;
-                case 5: 
+                case 4: 
                     printf("Informe o RA do aluno: ");
                     fgets(ra, sizeof(ra), stdin);
                     ra[strcspn(ra, "\n")] = '\0'; // REMOVE \n
                     alterarFaltas(turma, ra);
+                    break;
+                case 5: 
+                    printf("Informe o RA do aluno: ");
+                    fgets(ra, sizeof(ra), stdin);
+                    ra[strcspn(ra, "\n")] = '\0'; // REMOVE \n
+                    alterarNome(turma, ra);
                     break;
                 case 6: 
                     printf("Informe o RA do aluno: ");
                     fgets(ra, sizeof(ra), stdin);
                     ra[strcspn(ra, "\n")] = '\0'; // REMOVE \n
                     removerAluno(turma, ra);
+                    break;
+                case 7: 
+                    if (!isFileEmpty(turma) && !onlyDeletedAlunos(turma)) {
+                        exibirTodos(turma);
+                    } else {
+                        printf("Arquivo está vazio!\n");
+                    }
                     break;
                 case 0: 
                     printf("Programa encerrado!\n");
