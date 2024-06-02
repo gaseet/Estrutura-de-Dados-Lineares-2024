@@ -65,11 +65,9 @@ int onlyDeletedCarros(FILE *arq) { // Arquivo pode não estar vazio mas conter a
 void exibirOpcoes() {
     printf("1 - Cadastrar carro \n");
     printf("2 - Exibir os dados de um carro \n");
-    printf("3 - Alterar a marca de um carro \n");
-    printf("4 - Alterar o modelo de um carro \n");
-    printf("5 - Alterar a cor de um carro \n");
-    printf("6 - Remover um carro do cadastro \n");
-    printf("7 - Exibir carros cadastrados \n");
+    printf("3 - Alterar os dados um carro \n");
+    printf("4 - Remover um carro do cadastro \n");
+    printf("5 - Exibir carros cadastrados \n");
     printf("0 - Encerrar o programa \n");
 }
 
@@ -167,9 +165,15 @@ void exibirTodos (FILE* arq) {
     } while (!feof(arq));
 }
 
-void exibirCarro(FILE* arq, char placa[]) {
+void consultarCarro(FILE* arq) {
     // Em desenvolvimento: Busca no arquivo um carro com a placa dada. Se encontrar, exibe os dados.
     // Se não encontrar, informa que o carro não pertence a turma.
+
+    char placa[8];
+    printf("Informe a placa do carro: ");
+    fgets(placa, sizeof(placa), stdin);
+    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
+    
     Carro aux;
     int encontrado = 0;
     fseek(arq, 0, SEEK_SET);
@@ -194,6 +198,7 @@ void exibirCarro(FILE* arq, char placa[]) {
 void alterarMarca(FILE* arq, char placa[]) {
     // Em desenvolvimento: Busca no arquivo um carro com a placa dada. Se encontrar, altera a marca.
     // Se não encontrar, informa que o carro não pertence a o cadastro.
+    
     Carro aux;
     int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do carro encontrado (Se encontrado)
     int retorno;
@@ -226,6 +231,7 @@ void alterarMarca(FILE* arq, char placa[]) {
 void alterarModelo(FILE* arq, char placa[]) {
     // Em desenvolvimento: Busca no arquivo um carro com a placa dada. Se encontrar, altera o modelo.
     // Se não encontrar, informa que o carro não pertence a cadastro.
+
     Carro aux;
     int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do carro encontrado (Se encontrado)
     int retorno;
@@ -258,6 +264,7 @@ void alterarModelo(FILE* arq, char placa[]) {
 void alterarCor(FILE* arq, char placa[]) {
     // Em desenvolvimento: Busca no arquivo um carro com a placa dada. Se encontrar, altera a cor.
     // Se não encontrar, informa que o carro não pertence a turma.
+
     Carro aux;
     int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do carro encontrado (Se encontrado)
     int retorno;
@@ -287,19 +294,45 @@ void alterarCor(FILE* arq, char placa[]) {
     }
 }
 
-void removerCarro(FILE* arq, char placa[]) {
+void removerCarro(FILE* arq) {
     // Em desenvolvimento: Busca no arquivo um carro com a placa dada. 
     // Se encontrar, remove logicamente o carro, seja, altera o status para 0 (deletado).
     // Se não encontrar, informa que o carro não pertence a cadastro.
+
+    char placa[8];
+    printf("Informe a placa do carro: ");
+    fgets(placa, sizeof(placa), stdin);
+    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
+
     Carro aux;
     int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do cadastro encontrado (Se encontrado)
     int retorno;
     if (posicao != -1) {
+
         fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor de volta para o cadastro desejado
 
         retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do cadastro desejado
 
         if (retorno == 1) {
+
+            printf("--------------\n");
+            printf("Carro encontrado:\n");
+            printf("--------------\n");
+            printf("Placa: %s\n", aux.placa);
+            printf("Marca: %s\n", aux.marca);
+            printf("Modelo: %s\n", aux.modelo);
+            printf("Cor: %s\n", aux.cor);
+            printf("--------------\n");
+
+            printf("Deseja realmente remover o carro? Digite CONFIRMAR: ");
+            char confirmacao[10];
+            fgets(confirmacao, sizeof(confirmacao), stdin);
+            confirmacao[strcspn(confirmacao, "\n")] = '\0'; // REMOVE \n
+            if (strcmp(confirmacao, "CONFIRMAR") != 0) {
+                printf("Operação cancelada!\n");
+                return;
+            }
+
             fseek(arq, -(long)sizeof(Carro), SEEK_CUR); // Move cursor de volta para o cadastro desejado
 
             aux.status = 0;
@@ -358,6 +391,65 @@ void limparArquivo(FILE* arq) {
     }
 }
 
+void alterarCarro(FILE *arq) {
+
+    char placa[8];
+    printf("Informe a placa do carro: ");
+    fgets(placa, sizeof(placa), stdin);
+    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
+
+    Carro aux;
+    int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do carro encontrado (Se encontrado)
+    int retorno;
+    int op = -1;
+    if (posicao != -1) {
+        do {
+            printf("1 - Alterar marca\n");
+            printf("2 - Alterar modelo\n");
+            printf("3 - Alterar cor\n");
+            printf("4 - Alterar marca, modelo e cor\n");
+            printf("0 - Cancelar alteração\n");
+            printf("Informe a opção desejada: ");
+            scanf("%d", &op);
+            fflush(stdin);
+
+            if (op < 0 || op > 4) {
+                printf("Opção inválida! Por favor, escolha uma opção válida.\n");
+            }
+        } while (op < 0 || op > 4);
+
+        if (op == 0) {
+            printf("Operação cancelada!\n");
+            return;
+        }
+
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor de volta para o carro desejado
+
+        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do carro desejado
+
+        if (retorno == 1) {
+            fseek(arq, -(long)sizeof(Carro), SEEK_CUR);
+            switch (op) {
+                case 1:
+                    alterarMarca(arq, placa);
+                    break;
+                case 2:
+                    alterarModelo(arq, placa);
+                    break;
+                case 3:
+                    alterarCor(arq, placa);
+                    break;
+                case 4:
+                    alterarMarca(arq, placa);
+                    alterarModelo(arq, placa);
+                    alterarCor(arq, placa);
+                    break;
+            }
+        } 
+    } else {
+        printf("Carro não encontrado no registro!\n");
+    }
+}
 
 int main() {
     FILE* cadastro;
@@ -386,36 +478,15 @@ int main() {
                     cadastrarCarro(cadastro);
                     break;
                 case 2: 
-                    printf("Informe a placa do carro: ");
-                    fgets(placa, sizeof(placa), stdin);
-                    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-                    exibirCarro(cadastro, placa);
+                    consultarCarro(cadastro);
                     break;
                 case 3: 
-                    printf("Informe a placa do carro: ");
-                    fgets(placa, sizeof(placa), stdin);
-                    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-                    alterarMarca(cadastro, placa);
+                    alterarCarro(cadastro);
                     break;
                 case 4: 
-                    printf("Informe a placa do carro: ");
-                    fgets(placa, sizeof(placa), stdin);
-                    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-                    alterarModelo(cadastro, placa);
+                    removerCarro(cadastro);
                     break;
                 case 5: 
-                    printf("Informe a placa do carro: ");
-                    fgets(placa, sizeof(placa), stdin);
-                    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-                    alterarCor(cadastro, placa);
-                    break;
-                case 6: 
-                    printf("Informe a placa do carro: ");
-                    fgets(placa, sizeof(placa), stdin);
-                    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-                    removerCarro(cadastro, placa);
-                    break;
-                case 7: 
                     if (!isFileEmpty(cadastro) && !onlyDeletedCarros(cadastro)) {
                         exibirTodos(cadastro);
                     } else {
