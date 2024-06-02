@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 bool isValidFormat(char *str) {
     int len = strlen(str);
@@ -32,20 +33,30 @@ bool isValidFormat(char *str) {
     return true;
 }
 
+void getInputWithFormatCheck(char *str, int size) {
+    do {
+        printf("Enter a string in the format ABC-0123: ");
+        fgets(str, size, stdin); // Read user input from stdin
+        
+        // Remove newline character if present
+        str[strcspn(str, "\n")] = '\0';
+        
+        for (int i = 0; str[i] != '\0'; i++) {
+            str[i] = toupper(str[i]);
+        }
+
+        if (!isValidFormat(str)) {
+            printf("Invalid format. Please enter again.\n");
+        }
+    } while (!isValidFormat(str));
+}
+
 int main() {
     char str[10]; // Buffer for user input
     
-    printf("Enter a string in the format ABC-0123: ");
-    fgets(str, sizeof(str), stdin); // Read user input from stdin
+    getInputWithFormatCheck(str, sizeof(str));
     
-    // Remove newline character if present
-    str[strcspn(str, "\n")] = '\0';
-    
-    if (isValidFormat(str)) {
-        printf("Valid format\n");
-    } else {
-        printf("Invalid format\n");
-    }
+    printf("Input: %s\n", str);
 
     return 0;
 }
