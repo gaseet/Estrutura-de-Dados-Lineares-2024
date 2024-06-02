@@ -38,7 +38,7 @@ int indiceAtual;
 int hashing (char *chv) {
     int i, soma = 0, tam = strlen(chv);
     for (i = 0; i < tam; i++) {
-        soma = soma + chv[i] << (i % 8);
+        soma = soma + (chv[i] << (i % 8));
     }
     return (abs(soma) % QTDLINHAS);
 }
