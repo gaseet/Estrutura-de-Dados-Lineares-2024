@@ -107,6 +107,7 @@ void cadastrarCarro (FILE* arq) {
     printf("Informe a placa do carro: ");
     fgets(carro.placa, sizeof(carro.placa), stdin);
     carro.placa[strcspn(carro.placa, "\n")] = '\0'; // REMOVE \n
+    fflush(stdin);
 
     posicao = busca(arq, carro.placa);
 
@@ -117,14 +118,17 @@ void cadastrarCarro (FILE* arq) {
         printf("Informe a marca do carro: ");
         fgets(carro.marca, sizeof(carro.marca), stdin);
         carro.marca[strcspn(carro.marca, "\n")] = '\0'; // REMOVE \n
+        fflush(stdin);
 
         printf("Informe o modelo do carro: ");
         fgets(carro.modelo, sizeof(carro.modelo), stdin);
         carro.modelo[strcspn(carro.modelo, "\n")] = '\0'; // REMOVE \n
+        fflush(stdin);
 
         printf("Informe a cor do carro: ");
         fgets(carro.cor, sizeof(carro.cor), stdin);
         carro.cor[strcspn(carro.cor, "\n")] = '\0';
+        fflush(stdin);
 
         carro.status = 1;
 
@@ -173,6 +177,7 @@ void consultarCarro(FILE* arq) {
     printf("Informe a placa do carro: ");
     fgets(placa, sizeof(placa), stdin);
     placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
+    fflush(stdin);
     
     Carro aux;
     int encontrado = 0;
@@ -213,6 +218,7 @@ void alterarMarca(FILE* arq, char placa[]) {
             printf("Informe a nova marca do carro: ");
             fgets(aux.marca, sizeof(aux.marca), stdin);
             aux.marca[strcspn(aux.marca, "\n")] = '\0';
+            fflush(stdin);
 
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
@@ -246,6 +252,7 @@ void alterarModelo(FILE* arq, char placa[]) {
             printf("Informe o novo modelo do carro: ");
             fgets(aux.modelo, sizeof(aux.modelo), stdin);
             aux.modelo[strcspn(aux.modelo, "\n")] = '\0';
+            fflush(stdin);
 
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
@@ -279,6 +286,7 @@ void alterarCor(FILE* arq, char placa[]) {
             printf("Informe a nova cor do carro: ");
             fgets(aux.cor, sizeof(aux.cor), stdin);
             aux.cor[strcspn(aux.cor, "\n")] = '\0';
+            fflush(stdin);
 
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
@@ -303,6 +311,7 @@ void removerCarro(FILE* arq) {
     printf("Informe a placa do carro: ");
     fgets(placa, sizeof(placa), stdin);
     placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
+    fflush(stdin);
 
     Carro aux;
     int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do cadastro encontrado (Se encontrado)
@@ -323,11 +332,12 @@ void removerCarro(FILE* arq) {
             printf("Modelo: %s\n", aux.modelo);
             printf("Cor: %s\n", aux.cor);
             printf("--------------\n");
-
+            
             printf("Deseja realmente remover o carro? Digite CONFIRMAR: ");
             char confirmacao[10];
             fgets(confirmacao, sizeof(confirmacao), stdin);
             confirmacao[strcspn(confirmacao, "\n")] = '\0'; // REMOVE \n
+            fflush(stdin);
             if (strcmp(confirmacao, "CONFIRMAR") != 0) {
                 printf("Operação cancelada!\n");
                 return;
@@ -397,6 +407,7 @@ void alterarCarro(FILE *arq) {
     printf("Informe a placa do carro: ");
     fgets(placa, sizeof(placa), stdin);
     placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
+    fflush(stdin);
 
     Carro aux;
     int posicao = busca(arq, placa); // Cursor de registro aponta para o depois do carro encontrado (Se encontrado)
