@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define QTDLINHAS 7
+#define QTDLINHAS 53
 
 int hashing(char *chv) {
     int i, soma = 0, tam = strlen(chv);
@@ -14,6 +14,6 @@ int hashing(char *chv) {
 }
 
 int main() {
-    printf("%d\n", hashing("ACB"));
+    printf("%d\n", hashing("PDT-0396"));
     return 0;
 }

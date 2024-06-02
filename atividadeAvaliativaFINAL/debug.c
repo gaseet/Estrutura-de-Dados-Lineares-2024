@@ -32,7 +32,7 @@ void exibirTabelaDEBUGEmpty(tabelaHash tabela) {
             printf("LINHA %d:\n", i);
             printf("Endereço do primeiro nó: %p\n", tabela.linhas[i].primeiroNo);
             printf("Endereço do ultimo nó:   %p\n", (void*)tabela.linhas[i].ultimoNo);
-            printf("Quantidade de nó: %d\n", tabela.linhas[i].qtdNos);
+            printf("Quantidade de nós: %d\n", tabela.linhas[i].qtdNos);
             printf("--------------------\n");
             exibirLinhaDEBUG(tabela.linhas[i]);
         }

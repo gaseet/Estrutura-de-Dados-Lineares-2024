@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 typedef struct carro {
-    char placa[8];
+    char placa[9];
     char marca[15];
     char modelo[15];
     char cor[15];
@@ -384,7 +384,7 @@ void desalocarIndice(tabelaHash *tabela) {
 
 void consultarCarro(FILE* arq, tabelaHash *tabela) {
 
-    char placa[8];
+    char placa[9];
     printf("Informe a placa do carro: ");
     fgets(placa, sizeof(placa), stdin);
     placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
@@ -515,7 +515,7 @@ void alterarCor(FILE* arq, char placa[], tabelaHash *tabela) {
 
 void removerCarro(FILE* arq, tabelaHash *tabela) {
 
-    char placa[8];
+    char placa[9];
     printf("Informe a placa do carro: ");
     fgets(placa, sizeof(placa), stdin);
     placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
@@ -613,7 +613,7 @@ void limparArquivo(FILE* arq) {
 
 void alterarCarro(FILE *arq, tabelaHash *tabela) {
 
-    char placa[8];
+    char placa[9];
     printf("Informe a placa do carro: ");
     fgets(placa, sizeof(placa), stdin);
     placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
@@ -678,7 +678,6 @@ int main() {
 
     FILE* cadastro;
     char nomeFile[] = "carros.dat";
-    char placa [8];
     int op = -1;
     int c;
     cadastro = prepararArquivo (nomeFile);
