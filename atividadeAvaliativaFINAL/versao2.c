@@ -298,6 +298,7 @@ void getPlacaComFormatoValido(char *str, int size) {
     do {
         printf("Informe a placa no formato ABC-0123: ");
         fgets(str, size, stdin);
+        fflush(stdin);
         
         str[strcspn(str, "\n")] = '\0';
 
