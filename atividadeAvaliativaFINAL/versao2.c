@@ -319,7 +319,6 @@ void cadastrarCarro (FILE* arq, tabelaHash *tabela) {
     int retorno, posicao;
 
     getPlacaComFormatoValido(carro.placa, sizeof(carro.placa));
-    fflush(stdin);
 
     posicao = buscarNaTabela(*tabela, carro.placa);
 
@@ -430,8 +429,6 @@ void consultarCarro(FILE* arq, tabelaHash *tabela) {
 
     char placa[9];
     getPlacaComFormatoValido(placa, sizeof(placa));
-    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-    fflush(stdin);
 
     int posicao = buscarNaTabela(*tabela, placa);
     int retorno;
@@ -560,8 +557,6 @@ void removerCarro(FILE* arq, tabelaHash *tabela) {
 
     char placa[9];
     getPlacaComFormatoValido(placa, sizeof(placa));
-    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-    fflush(stdin);
 
     Carro aux;
     int posicao = buscarNaTabela(*tabela, placa);
@@ -657,8 +652,6 @@ void alterarCarro(FILE *arq, tabelaHash *tabela) {
 
     char placa[9];
     getPlacaComFormatoValido(placa, sizeof(placa));
-    placa[strcspn(placa, "\n")] = '\0'; // REMOVE \n
-    fflush(stdin);
 
     Carro aux;
     int posicao = buscarNaTabela(*tabela, placa);
