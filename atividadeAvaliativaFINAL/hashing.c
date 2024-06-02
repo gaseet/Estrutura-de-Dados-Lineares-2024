@@ -172,15 +172,16 @@ noTabela* buscarNaLinha(linhaTabela lista, char* chv) {
     }
 }
 
-noTabela* buscarNaTabela(tabelaHash tabela, char *chv) {
+int buscarNaTabela(tabelaHash tabela, char *chv) {
     int qualLinha = hALfa(chv);
     noTabela *aux = buscarNaLinha(tabela.linhas[qualLinha], chv);
     if (aux != NULL) {
-        printf("Chave encontrada na linha %d!\n", qualLinha);
+        printf("Chave encontrada na linha %d! Posição no arquivo: %d\n", qualLinha, aux->posicaoNoArquivo);
+        return aux->posicaoNoArquivo;
     } else {
         printf("Chave não encontrada na tabela!\n");
+        return -1;
     }
-    return aux;
 }
 
 void removerNaLinha(linhaTabela *lista, char *chv) {
@@ -293,6 +294,11 @@ int main() {
     tabelaHash tabela;
     inicializarTabela(&tabela);
     inserirNaTabela(&tabela, "123\0", 1);
+    inserirNaTabela(&tabela, "132\0", 1);
+    inserirNaTabela(&tabela, "213\0", 1);
+    inserirNaTabela(&tabela, "321\0", 1);
+    inserirNaTabela(&tabela, "124\0", 9);
     
     buscarNaTabela(tabela, "124\0");
+    removerNaTabela(&tabela, "124\0");
 }
