@@ -30,7 +30,6 @@ typedef struct linhatabela {
 
 typedef struct tabelahash {
     linhaTabela linhas[QTDLINHAS];
-    // Maior e menor linha apenas para fins de debug
     int menorLinha;
     int maiorLinha;
 } tabelaHash;
@@ -84,7 +83,7 @@ void inserirNaLinha(linhaTabela *lista, char *chv, int posicao) {
     } else if (stricmp(lista->primeiroNo->chave, chv) == 0) {
         printf("Erro! Chave já presente na lista!\n");
         return;
-    } else if (stricmp(lista->primeiroNo->chave, chv) > 0) { // INSERE NO INICIO
+    } else if (stricmp(lista->primeiroNo->chave, chv) > 0) {
         novoNo = criarnoTabela(chv, posicao);
         lista->primeiroNo->ant = novoNo;
         novoNo->prox = lista->primeiroNo;
@@ -93,14 +92,14 @@ void inserirNaLinha(linhaTabela *lista, char *chv, int posicao) {
         return;
     } else if (stricmp(lista->ultimoNo->chave, chv) == 0) {
         return;
-    } else if (stricmp(lista->ultimoNo->chave, chv) < 0) { // INSERE NO FIM
+    } else if (stricmp(lista->ultimoNo->chave, chv) < 0) {
         novoNo = criarnoTabela(chv, posicao);
         lista->ultimoNo->prox = novoNo;
         novoNo->ant = lista->ultimoNo;
         lista->ultimoNo = novoNo;
         lista->qtdNos++;
         return;
-    } else { // INSERE NO "MEIO"
+    } else {
         aux = lista->primeiroNo->prox;
         while (aux != NULL) {
             retorno = stricmp (aux->chave, chv);
@@ -129,7 +128,7 @@ void atualizarMaiorEMenorLinha(tabelaHash *tabela) {
 
     for (i = 0; i < QTDLINHAS; i++) {
         if (isLinhaEmpty(tabela->linhas[i])) {
-            continue; // Pula pra próx iteração
+            continue;
         }
         if (tabela->maiorLinha == -1 || tabela->linhas[i].qtdNos > tabela->linhas[tabela->maiorLinha].qtdNos) {
             tabela->maiorLinha = i;
@@ -231,16 +230,12 @@ void removerNaTabela(tabelaHash *tabela, char *chv) {
 }
 
 void inicializarIndiceGlobal(FILE *arq) {
-    fseek(arq, 0, SEEK_END); // Move o ponteiro para o final do arquivo
-    int tamanho = ftell(arq); // Obtém a posição atual do ponteiro (tamanho do arquivo em bytes)
-    indiceAtual = tamanho / sizeof(Carro); // Calcula o índice com base no tamanho do arquivo
+    fseek(arq, 0, SEEK_END);
+    int tamanho = ftell(arq);
+    indiceAtual = tamanho / sizeof(Carro);
 }
 
 int onlyDeletedCarrosOrEmptyFile(tabelaHash tabela) { 
-    // Arquivo pode não estar vazio mas conter apenas carros deletados
-    // Fazemos uma verificação eficiente, verificando apenas se a tabela está vazia
-    // Pois se ela estiver vazia,
-    // o arquivo também estará ou vazio ou contendo apenas carros "deletados"
     
     for (int i = 0; i < QTDLINHAS; i++) {
         if (isLinhaEmpty(tabela.linhas[i]) == 0) {
@@ -328,12 +323,12 @@ void cadastrarCarro (FILE* arq, tabelaHash *tabela) {
 
         printf("Informe a marca do carro: ");
         fgets(carro.marca, sizeof(carro.marca), stdin);
-        carro.marca[strcspn(carro.marca, "\n")] = '\0'; // REMOVE \n
+        carro.marca[strcspn(carro.marca, "\n")] = '\0';
         fflush(stdin);
 
         printf("Informe o modelo do carro: ");
         fgets(carro.modelo, sizeof(carro.modelo), stdin);
-        carro.modelo[strcspn(carro.modelo, "\n")] = '\0'; // REMOVE \n
+        carro.modelo[strcspn(carro.modelo, "\n")] = '\0';
         fflush(stdin);
 
         printf("Informe a cor do carro: ");
@@ -343,12 +338,12 @@ void cadastrarCarro (FILE* arq, tabelaHash *tabela) {
 
         carro.status = 1;
 
-        fseek(arq, 0, SEEK_END); // Move ponteiro para o final
+        fseek(arq, 0, SEEK_END);
 
         retorno = fwrite(&carro, sizeof(Carro), 1, arq);
 
         if (retorno == 1) {
-            fflush(arq); // Força o "descarregamento" do buffer (Salva no arquivo ao invés de ficar na RAM)
+            fflush(arq);
             printf("Carro gravado com sucesso!\n");
             inserirNaTabela(tabela, carro.placa, indiceAtual);
             indiceAtual++;
@@ -438,9 +433,9 @@ void consultarCarro(FILE* arq, tabelaHash *tabela) {
     fseek(arq, 0, SEEK_SET);
     
     if (posicao != -1) {
-        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor para o carro desejado
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET);
 
-        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do carro desejado
+        retorno = fread(&aux, sizeof(Carro), 1, arq);
 
         if (retorno == 1) {
             printf("--------------\n");
@@ -463,12 +458,12 @@ void alterarMarca(FILE* arq, char placa[], tabelaHash *tabela) {
     int posicao = buscarNaTabela(*tabela, placa);
     int retorno;
     if (posicao != -1) {
-        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor para o carro desejado
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET);
 
-        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do carro desejado
+        retorno = fread(&aux, sizeof(Carro), 1, arq);
 
         if (retorno == 1) {
-            fseek(arq, -(long)sizeof(Carro), SEEK_CUR); // Move cursor de volta para o carro desejado
+            fseek(arq, -(long)sizeof(Carro), SEEK_CUR);
 
             printf("Informe a nova marca do carro: ");
             fgets(aux.marca, sizeof(aux.marca), stdin);
@@ -478,7 +473,7 @@ void alterarMarca(FILE* arq, char placa[], tabelaHash *tabela) {
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
             if (retorno == 1) {
-                fflush(arq); // Força o "descarregamento" do buffer (Salva no arquivo ao invés de ficar na RAM)
+                fflush(arq);
                 printf("Marca alterada com sucesso!\n");
             } else {
                 printf("Erro ao tentar gravar carro!\n");
@@ -495,12 +490,12 @@ void alterarModelo(FILE* arq, char placa[], tabelaHash *tabela) {
     int posicao = buscarNaTabela(*tabela, placa);
     int retorno;
     if (posicao != -1) {
-        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor para o carro desejado
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET);
 
-        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do carro desejado
+        retorno = fread(&aux, sizeof(Carro), 1, arq); 
 
         if (retorno == 1) {
-            fseek(arq, -(long)sizeof(Carro), SEEK_CUR); // Move cursor de volta para o carro desejado
+            fseek(arq, -(long)sizeof(Carro), SEEK_CUR);
 
             printf("Informe o novo modelo do carro: ");
             fgets(aux.modelo, sizeof(aux.modelo), stdin);
@@ -510,7 +505,7 @@ void alterarModelo(FILE* arq, char placa[], tabelaHash *tabela) {
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
             if (retorno == 1) {
-                fflush(arq); // Força o "descarregamento" do buffer (Salva no arquivo ao invés de ficar na RAM)
+                fflush(arq);
                 printf("Modelo alterado com sucesso!\n");
             } else {
                 printf("Erro ao tentar gravar carro!\n");
@@ -527,12 +522,12 @@ void alterarCor(FILE* arq, char placa[], tabelaHash *tabela) {
     int posicao = buscarNaTabela(*tabela, placa);
     int retorno;
     if (posicao != -1) {
-        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor para o carro desejado
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET);
 
-        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do carro desejado
+        retorno = fread(&aux, sizeof(Carro), 1, arq);
 
         if (retorno == 1) {
-            fseek(arq, -(long)sizeof(Carro), SEEK_CUR); // Move cursor de volta para o carro desejado
+            fseek(arq, -(long)sizeof(Carro), SEEK_CUR);
 
             printf("Informe a nova cor do carro: ");
             fgets(aux.cor, sizeof(aux.cor), stdin);
@@ -542,7 +537,7 @@ void alterarCor(FILE* arq, char placa[], tabelaHash *tabela) {
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
             if (retorno == 1) {
-                fflush(arq); // Força o "descarregamento" do buffer (Salva no arquivo ao invés de ficar na RAM)
+                fflush(arq);
                 printf("Cor alterada com sucesso!\n");
             } else {
                 printf("Erro ao tentar gravar carro!\n");
@@ -563,9 +558,9 @@ void removerCarro(FILE* arq, tabelaHash *tabela) {
     int retorno;
     if (posicao != -1) {
 
-        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor para o cadastro desejado
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET);
 
-        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do cadastro desejado
+        retorno = fread(&aux, sizeof(Carro), 1, arq);
 
         if (retorno == 1) {
 
@@ -581,21 +576,21 @@ void removerCarro(FILE* arq, tabelaHash *tabela) {
             printf("Deseja realmente remover o carro? Digite CONFIRMAR: ");
             char confirmacao[10];
             fgets(confirmacao, sizeof(confirmacao), stdin);
-            confirmacao[strcspn(confirmacao, "\n")] = '\0'; // REMOVE \n
+            confirmacao[strcspn(confirmacao, "\n")] = '\0';
             fflush(stdin);
             if (strcmp(confirmacao, "CONFIRMAR") != 0) {
                 printf("Operação cancelada!\n");
                 return;
             }
 
-            fseek(arq, -(long)sizeof(Carro), SEEK_CUR); // Move cursor de volta para o cadastro desejado
+            fseek(arq, -(long)sizeof(Carro), SEEK_CUR);
 
             aux.status = 0;
 
             retorno = fwrite(&aux, sizeof(Carro), 1, arq);
 
             if (retorno == 1) {
-                fflush(arq); // Força o "descarregamento" do buffer (Salva no arquivo ao invés de ficar na RAM)
+                fflush(arq);
                 removerNaTabela(tabela, placa);
                 printf("Carro removido com sucesso!\n");
             } else {
@@ -613,16 +608,13 @@ void limparArquivo(FILE* arq) {
     int retorno;
     char nomeAux[100] = "auxiliar.dat";
     
-    // Cria e abre o arquivo temporário
     temp = fopen(nomeAux, "r+b");
     if (temp == NULL) {
         temp = fopen(nomeAux, "w+b");
     }
     
-    // Move o ponteiro para o início do arquivo original
     fseek(arq, 0, SEEK_SET);
     
-    // Lê cada registro do arquivo original e escreve os ativos no temporário
     while (fread(&aux, sizeof(Carro), 1, arq) == 1) {
         if (aux.status == 1) {
             if (fwrite(&aux, sizeof(Carro), 1, temp) != 1) {
@@ -633,11 +625,9 @@ void limparArquivo(FILE* arq) {
         }
     }
     
-    // Fecha ambos os arquivos
     fclose(arq);
     fclose(temp);
     
-    // Remove o arquivo original e renomeia o temporário
     if (remove("carros.dat") != 0) {
         printf("Erro ao remover o arquivo original\n");
         return;
@@ -678,9 +668,9 @@ void alterarCarro(FILE *arq, tabelaHash *tabela) {
             return;
         }
 
-        fseek(arq, posicao * sizeof(Carro), SEEK_SET); // Move cursor de volta para o carro desejado
+        fseek(arq, posicao * sizeof(Carro), SEEK_SET);
 
-        retorno = fread(&aux, sizeof(Carro), 1, arq); // Lê a informação do carro desejado
+        retorno = fread(&aux, sizeof(Carro), 1, arq);
 
         if (retorno == 1) {
             fseek(arq, -(long)sizeof(Carro), SEEK_CUR);
@@ -719,9 +709,7 @@ int main() {
         printf("Erro ao tentar criar/abrir o arquivo \n");
     }
     else {
-        limparArquivo(cadastro); // Garante um arquivo limpo toda execução
-        // Se o usuário fechasse o programa sem encerrar corretamente, o arquivo
-        // continuaria "sujo", causando problemas na hora de preencher a tabela de hashing
+        limparArquivo(cadastro);
         cadastro = prepararArquivo (nomeFile);
         if (cadastro == NULL) {
             printf("Erro ao tentar criar/abrir o arquivo \n");
