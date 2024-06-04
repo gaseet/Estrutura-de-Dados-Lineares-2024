@@ -737,19 +737,31 @@ int main() {
                     cadastrarCarro(cadastro, &tabela);
                     break;
                 case 2: 
-                    consultarCarro(cadastro, &tabela);
+                    if (!onlyDeletedCarrosOrEmptyFile(tabela)) {
+                        consultarCarro(cadastro, &tabela);
+                    } else {
+                        printf("Nenhum carro no cadastro!\n");
+                    }
                     break;
                 case 3:
-                    alterarCarro(cadastro, &tabela);
+                    if (!onlyDeletedCarrosOrEmptyFile(tabela)) {
+                        alterarCarro(cadastro, &tabela);
+                    } else {
+                        printf("Nenhum carro no cadastro!\n");
+                    }
                     break;
                 case 4: 
-                    removerCarro(cadastro, &tabela);
+                    if (!onlyDeletedCarrosOrEmptyFile(tabela)) {
+                        removerCarro(cadastro, &tabela);
+                    } else {
+                        printf("Nenhum carro no cadastro!\n");
+                    }
                     break;
                 case 5: 
                     if (!onlyDeletedCarrosOrEmptyFile(tabela)) {
                         exibirTodos(cadastro);
                     } else {
-                        printf("Arquivo está vazio!\n");
+                        printf("Nenhum carro no cadastro!\n");
                     }
                     break;
                 case 0: 
